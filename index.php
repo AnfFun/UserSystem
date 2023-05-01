@@ -1,25 +1,25 @@
 <?php
-include_once 'db.php';
 include_once 'debug.php';
-
-$user_item = mysqli_query($db, "SELECT * FROM `user`"
-);
-$user_item = mysqli_fetch_all($user_item);
+include_once 'connect.php';
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
     <title>Users table</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"
+            integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.1/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.1/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="script.js"></script>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="js/userModal.js"></script>
+    <script src="js/checkbox.js"></script>
 </head>
 <body>
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
-<link href="styles.css" rel="stylesheet">
+<link href="css/styles.css" rel="stylesheet">
 <div class="container">
     <div class="row flex-lg-nowrap">
         <div class="col">
@@ -30,71 +30,18 @@ $user_item = mysqli_fetch_all($user_item);
                             <div class="card-title">
                                 <h6 class="mr-2"><span>Users</span></h6>
                             </div>
-                            <div class="e-table">
-                                <div class="table-responsive table-lg mt-3">
-                                    <table class="table table-bordered">
-                                        <thead>
-                                        <tr>
-                                            <th class="align-top">
-                                                <div
-                                                        class="custom-control custom-control-inline custom-checkbox custom-control-nameless m-0">
-                                                    <input type="checkbox" class="custom-control-input" id="all-items">
-                                                    <label class="custom-control-label" for="all-items"></label>
-                                                </div>
-                                            </th>
-                                            <th class="max-width">Name</th>
-                                            <th class="sortable">Role</th>
-                                            <th>Status</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr>
-                                            <?php
-                                            foreach ($user_item
-
-                                            as $user){
-                                            ?>
-                                            <td class="align-middle">
-                                                <div
-                                                        class="custom-control custom-control-inline custom-checkbox custom-control-nameless m-0 align-top">
-                                                    <input type="checkbox" class="custom-control-input"
-                                                           id="item-<?= $user['0'] ?>">
-                                                    <label class="custom-control-label"
-                                                           for="item-<?= $user['0'] ?>"></label>
-                                                </div>
-                                            </td>
-                                            <td class="text-nowrap align-middle"><?= $user['1'] . ' ' . $user['2'] ?>  </td>
-                                            <td class="text-nowrap align-middle"><span><?= $user['3'] ?></span></td>
-                                            <td class="text-center align-middle"><i
-                                                        class="fa fa-circle <?php $user['4'] == 1 ? print('active-circle') : print('not-active-circle') ?>"></i>
-                                            </td>
-                                            <td class="text-center align-middle">
-                                                <div class="btn-group align-top">
-                                                    <button class="btn btn-sm btn-outline-secondary badge" type="button"
-                                                            data-toggle="modal"
-                                                            data-target="#user-form-modal">Edit
-                                                    </button>
-                                                    <button class="btn btn-sm btn-outline-secondary badge"
-                                                            type="button"><i
-                                                                class="fa fa-trash"></i></button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <?php
-                                        }
-                                        ?>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
+                            <button class="btn btn-sm btn-outline-secondary badge" type="button"
+                                    data-toggle="modal"
+                                    data-target="#user-add-modal">Add User
+                            </button>
+                            <div id="displayDataTable"></div>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- User Form Modal -->
+            <!-- User Add Modal -->
 
-            <div class="modal fade" id="user-form-modal" tabindex="-1" aria-labelledby="user-form-modal"
+            <div class="modal fade" id="user-add-modal" tabindex="-1" aria-labelledby="user-form-modal"
                  aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -107,19 +54,33 @@ $user_item = mysqli_fetch_all($user_item);
                         <div class="modal-body">
                             <form>
                                 <div class="form-group">
-                                    <label for="first-name" class="col-form-label">First Name:</label>
-                                    <input type="text" class="form-control" id="first-name">
+                                    <label for="first_name">First name</label>
+                                    <input type="text" class="form-control" id="first_name">
                                 </div>
                                 <div class="form-group">
-                                    <label for="last-name" class="col-form-label">Last Name:</label>
-                                    <input type="text" class="form-control" id="last-name">
+                                    <label for="last_name">Last name</label>
+                                    <input type="text" class="form-control" id="last_name">
                                 </div>
-
+                                <div class="form-group">
+                                    <label for="status" class="toogle-label">Status</label>
+                                    <label class="switch">
+                                        <input type="checkbox" class="form-control switch" id="status">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label for="role" class="role-lable" >Role</label>
+                                    <select class="form-control" name="role" id="role">
+                                        <option value="">-Please Select-</option>
+                                        <option value="admin">Admin</option>
+                                        <option value="user">User</option>
+                                    </select>
+                                </div>
                             </form>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Save</button>
+                            <button type="button" class="btn btn-primary" onclick="adduser()">Save</button>
                         </div>
                     </div>
                 </div>
@@ -127,6 +88,7 @@ $user_item = mysqli_fetch_all($user_item);
 
         </div>
     </div>
-</body>
 
+
+</body>
 </html>
