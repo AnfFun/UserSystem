@@ -30,29 +30,37 @@ include_once 'connect.php';
                             <div class="card-title">
                                 <h6 class="mr-2"><span>Users</span></h6>
                             </div>
-                            <button class="btn btn-sm btn-outline-secondary badge" type="button"
-                                    data-toggle="modal"
-                                    data-target="#user-add-modal">Add User
+                            <button class="btn btn-sm btn-primary badge " type="button" data-toggle="modal" onclick="ed()" id="add-btn">
+                                Add User
                             </button>
                             <div id="displayDataTable"></div>
+                            <div class="d-flex ">
+                                <select class="form-control select " name="option" id="option">
+                                    <option value="">-Please Select-</option>
+                                    <option  value="set-active">Set active</option>
+                                    <option  value="set-not-active">Set not active</option>
+                                    <option  value="set-delete">Delete</option>
+                                </select>
+                                <button class=" btn btn-sm btn-primary badge" id="ok-btn">OK</button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- User Add Modal -->
+            <!-- User Modal Form  -->
 
-            <div class="modal fade" id="user-add-modal" tabindex="-1" aria-labelledby="user-form-modal"
+            <div class="modal fade" id="user-modal" tabindex="-1" aria-labelledby="user-form-modal"
                  aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="UserModalLabel">Add user</h5>
+                            <h5 class="modal-title" id="modal-title"></h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <div class="modal-body">
-                            <form>
+                            <form id="modal-form">
                                 <div class="form-group">
                                     <label for="first_name">First name</label>
                                     <input type="text" class="form-control" id="first_name">
@@ -69,18 +77,19 @@ include_once 'connect.php';
                                     </label>
                                 </div>
                                 <div class="form-group">
-                                    <label for="role" class="role-lable" >Role</label>
+                                    <label for="role" class="role-lable">Role</label>
                                     <select class="form-control" name="role" id="role">
                                         <option value="">-Please Select-</option>
-                                        <option value="admin">Admin</option>
-                                        <option value="user">User</option>
+                                        <option value="Admin">Admin</option>
+                                        <option value="User">User</option>
                                     </select>
                                 </div>
                             </form>
                         </div>
                         <div class="modal-footer">
+                            <input type="hidden" id="hiddenData">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary" onclick="adduser()">Save</button>
+                            <button type="button" class="btn btn-primary" id="sus-btn"></button>
                         </div>
                     </div>
                 </div>
