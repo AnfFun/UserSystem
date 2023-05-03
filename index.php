@@ -7,7 +7,7 @@ include_once 'connect.php';
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Users table</title>
+    <title>Users System</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"
             integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>

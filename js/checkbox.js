@@ -65,3 +65,11 @@ $(document).on('click', '#ok-btn', function () {
         })
     }
 });
+$('#ok-btn').off('click').on('click', function () {
+    if ($('#option').val() !== '' && $(`.select-checkbox:checked`).length === 0) {
+        alert('Please pick at least one user');
+        return false;
+    }else if($('.select-checkbox:checked').length !== 0 && $('#option').val() === '' ){
+        alert('Please choose the option');
+    }
+});

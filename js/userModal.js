@@ -113,7 +113,7 @@ function editUser(updateId) {
 }
 
 function deleteUser(deleteId) {
-    if (confirm("CONFIRM DELETE?")) {
+    if (confirm("CONFIRM DELETE")) {
         $.ajax({
             url: "forms/delete.php",
             type: "post",
