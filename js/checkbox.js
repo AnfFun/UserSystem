@@ -23,13 +23,24 @@ $(document).ready(function () {
         }
     });
 });
-$(document).on('click', '#ok-btn', function () {
+
+$(document).off('click').on('click', '.ok-btn', function () {
     let selectedRows = [];
     $('.select-checkbox:checked').each(function () {
         selectedRows.push($(this).val());
     });
-    let optionSelected = $('#option').val();
-    if (optionSelected === 'set-active') {
+    if ($('.select-checkbox:checked').length === 0 && $('.option').val() !== '') {
+        alert('Please pick at least one user');
+
+    } else if ($('.select-checkbox:checked').length !== 0 && $('.sel-1').val() === '' && $('.sel-2').val() === '') {
+        alert('Please choose the option');
+        console.log($('.sel-2').val())
+    } else if ($('.sel-1').val() !== '' && $('.sel-2').val() !== '') {
+        if ($('.sel-1').val() !== $('.sel-2').val()) {
+            $('.option').val('')
+            return
+        }
+    } else if ($('.sel-1').val() === 'set-active' || $('.sel-2').val() === 'set-active') {
         $.ajax({
             url: "forms/edit.php",
             type: "post",
@@ -41,7 +52,7 @@ $(document).on('click', '#ok-btn', function () {
             }
         })
 
-    } else if (optionSelected === 'set-not-active') {
+    } else if ($('.sel-1').val() === 'set-not-active' || $('.sel-2').val() === 'set-not-active') {
         $.ajax({
             url: "forms/edit.php",
             type: "post",
@@ -52,24 +63,19 @@ $(document).on('click', '#ok-btn', function () {
                 displayData();
             }
         })
-    } else if (optionSelected === 'set-delete') {
-        $.ajax({
-            url: "forms/delete.php",
-            type: "post",
-            data: {
-                setDelete: selectedRows
-            },
-            success: function (data, status) {
-                displayData();
-            }
-        })
+    } else if (($('.sel-1').val() === 'set-delete' || $('.sel-2').val() === 'set-delete') && selectedRows.length !== 0) {
+        if (confirm("CONFIRM DELETE")) {
+            $.ajax({
+                url: "forms/delete.php",
+                type: "post",
+                data: {
+                    setDelete: selectedRows
+                },
+                success: function (data, status) {
+                    displayData();
+                }
+            })
+        }
     }
-});
-$('#ok-btn').off('click').on('click', function () {
-    if ($('#option').val() !== '' && $(`.select-checkbox:checked`).length === 0) {
-        alert('Please pick at least one user');
-        return false;
-    }else if($('.select-checkbox:checked').length !== 0 && $('#option').val() === '' ){
-        alert('Please choose the option');
-    }
-});
+})
+;

@@ -36,8 +36,8 @@ if (isset($_POST['displaySend'])) {
         <tr>
         <td class="align-middle">
         <div class="custom-control custom-control-inline custom-checkbox custom-control-nameless m-0 align-top">
-           <input type="checkbox" class="custom-control-input select-checkbox" value="'.$id.'" id="item-'. $id . '">
-            <label class="custom-control-label" for="item-'.$id.'"></label>
+           <input type="checkbox" class="custom-control-input select-checkbox" value="' . $id . '" id="item-' . $id . '">
+            <label class="custom-control-label" for="item-' . $id . '"></label>
             </div>
               </td>
                           <td class="text-nowrap align-middle">' . $first_name . ' ' . $last_name . ' </td>

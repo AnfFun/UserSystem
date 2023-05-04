@@ -10,60 +10,46 @@ if (isset($_POST['updateId'])) {
     ";
     $result = mysqli_query($con, $sql);
     $response = array();
+
     while ($row = mysqli_fetch_assoc($result)) {
         $response = $row;
+
     }
-    echo json_encode($response);
+    if ($result) {
+        $response['response'] = 200;
+        echo json_encode($response);
+    } else {
+        $response['response'] = 500;
+        echo json_encode($response);
 
+    }
 
-} else {
-    $response['status'] = 200;
-    $response['message'] = "Invalid or data not found";
 }
 
 
-if (isset($_POST['hiddenData'])) {
-    $uniqueId = $_POST['hiddenData'];
-    $f_name = $_POST['updateFName'];
-    $l_name = $_POST['updateLName'];
-    $status = $_POST['updateStatus'];
-    $role = $_POST['updateRole'];
-
-    $sql = "
-    UPDATE `user`
-    SET 
-        first_name = '$f_name',
-        last_name = '$l_name',
-        role = '$role',
-        status = '$status'
-    WHERE
-        id = '$uniqueId'
-    ";
-    $result = mysqli_query($con,$sql);
-}
-if (isset($_POST['setNotActive'])){
+if (isset($_POST['setNotActive'])) {
     $ids = $_POST['setNotActive'];
     $status = "off";
-    $ids = implode(',',$ids);
-    $sql="
+    $ids = implode(',', $ids);
+    $sql = "
     UPDATE `user`
     SET
         status = '$status'
     WHERE id IN ($ids)
     ";
-    $result = mysqli_query($con,$sql);
+    $result = mysqli_query($con, $sql);
 
 }
-if (isset($_POST['setActive'])){
+if (isset($_POST['setActive'])) {
     $ids = $_POST['setActive'];
     $status = "on";
-    $ids = implode(',',$ids);
-    $sql="
+    $ids = implode(',', $ids);
+    $sql = "
     UPDATE `user`
     SET
         status = '$status'
     WHERE id IN ($ids)
     ";
-    $result = mysqli_query($con,$sql);
+    $result = mysqli_query($con, $sql);
 
 }

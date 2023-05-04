@@ -10,7 +10,14 @@ if (isset($_POST['deleteSend'])) {
         id = '$unique'
     ";
     $result = mysqli_query($con,$sql);
+    if ($result) {
+        $response['status'] = 200;
+    } else {
+        $response['status'] = 500;
+    }
+    echo json_encode($response);
 }
+
 if (isset($_POST['setDelete'])){
     $ids = $_POST['setDelete'];
     $ids = implode(',',$ids);

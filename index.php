@@ -29,18 +29,30 @@ include_once 'connect.php';
                             <div class="card-title">
                                 <h6 class="mr-2"><span>Users</span></h6>
                             </div>
-                            <button class="btn btn-sm btn-primary badge " type="button" data-toggle="modal" onclick="ed()" id="add-btn">
-                                Add User
-                            </button>
+                            <div class="d-flex ">
+                                <button class="btn btn-sm btn-primary badge add-btn" type="button" data-toggle="modal" onclick="ed()" >
+                                    Add User
+                                </button>
+                                <select class="form-control option sel-1 " name="option">
+                                    <option value="">-Please Select-</option>
+                                    <option value="set-active">Set active</option>
+                                    <option value="set-not-active">Set not active</option>
+                                    <option value="set-delete">Delete</option>
+                                </select>
+                                <button class=" btn btn-sm btn-primary badge ok-btn" >OK</button>
+                            </div>
                             <div id="displayDataTable"></div>
                             <div class="d-flex ">
-                                <select class="form-control select " name="option" id="option">
+                                <button class="btn btn-sm btn-primary badge add-btn " type="button" data-toggle="modal" onclick="ed()" >
+                                    Add User
+                                </button>
+                                <select class="form-control option sel-2 " name="option">
                                     <option value="">-Please Select-</option>
-                                    <option  value="set-active">Set active</option>
-                                    <option  value="set-not-active">Set not active</option>
-                                    <option  value="set-delete">Delete</option>
+                                    <option value="set-active">Set active</option>
+                                    <option value="set-not-active">Set not active</option>
+                                    <option value="set-delete">Delete</option>
                                 </select>
-                                <button class=" btn btn-sm btn-primary badge" id="ok-btn">OK</button>
+                                <button class=" btn btn-sm btn-primary badge ok-btn">OK</button>
                             </div>
                         </div>
                     </div>
@@ -89,7 +101,9 @@ include_once 'connect.php';
                             <input type="hidden" id="hiddenData">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             <button type="button" class="btn btn-primary" id="sus-btn"></button>
+                            <p class="#modal-msg"></p>
                         </div>
+
                     </div>
                 </div>
             </div>

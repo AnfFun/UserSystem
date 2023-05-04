@@ -68,7 +68,7 @@ input:checked + .slider:before {
 .role-lable{
   width: 100%;
 }
-.select{
+.option{
   width: 15%;
 }
 
