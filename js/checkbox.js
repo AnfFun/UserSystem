@@ -25,54 +25,129 @@ $(document).ready(function () {
 });
 
 $(document).off('click').on('click', '.ok-btn', function () {
-    let selectedRows = [];
-    $('.select-checkbox:checked').each(function () {
-        selectedRows.push($(this).val());
-    });
-    if ($('.select-checkbox:checked').length === 0 && $('.option').val() !== '') {
+    const numChecked = $('.select-checkbox:checked')
+    const sel1 = $('.sel-1').val()
+    const sel2 = $('.sel-2').val()
+    let selectedRows = numChecked.map(function () {
+        return $(this).val();
+    }).get();
+
+    if (numChecked.length === 0 && (sel1 !== '' || sel2 !== '')) {
         alert('Please pick at least one user');
 
-    } else if ($('.select-checkbox:checked').length !== 0 && $('.sel-1').val() === '' && $('.sel-2').val() === '') {
+    } else if (numChecked.length !== 0 && sel1 === '' && sel2 === '') {
         alert('Please choose the option');
-        console.log($('.sel-2').val())
-    } else if ($('.sel-1').val() !== '' && $('.sel-2').val() !== '') {
-        if ($('.sel-1').val() !== $('.sel-2').val()) {
+
+    } else if (sel1 !== sel2 && (sel1 !== '' && sel2 !== '')) {
+        if (sel1 !== sel2) {
             $('.option').val('')
-            return
         }
-    } else if ($('.sel-1').val() === 'set-active' || $('.sel-2').val() === 'set-active') {
+    } else if (sel1 === 'set-active' || sel2 === 'set-active') {
         $.ajax({
-            url: "forms/edit.php",
+            url: "forms/setUser.php",
             type: "post",
             data: {
                 setActive: selectedRows
             },
             success: function (data, status) {
                 displayData();
+                let active = JSON.parse(data)
+                switch (active.response) {
+                    case 200: {
+                        console.log({
+                                status: true, error: null, selectedId: selectedRows, action: 'set-active'
+                            }
+                        );
+                        break;
+                    }
+                    case 500: {
+                        console.log({
+                            status: false, error: {
+                                code: 500, message: 'Internal Server Error'
+                            }
+                        })
+                    }
+                }
+            },
+            error: function (data, status) {
+                console.log({
+                    status: false, error: {
+                        code: 404, message: 'Not Found SetUser form'
+                    }
+                })
             }
         })
 
-    } else if ($('.sel-1').val() === 'set-not-active' || $('.sel-2').val() === 'set-not-active') {
+    } else if (sel1 === 'set-not-active' || sel2 === 'set-not-active') {
         $.ajax({
-            url: "forms/edit.php",
+            url: "forms/setUser.php",
             type: "post",
             data: {
                 setNotActive: selectedRows
             },
             success: function (data, status) {
                 displayData();
+                let notActive = JSON.parse(data)
+                switch (notActive.response) {
+                    case 200: {
+                        console.log({
+                                status: true, error: null, selectedId: selectedRows, action: 'set-not-active'
+                            }
+                        );
+                        break;
+                    }
+                    case 500: {
+                        console.log({
+                            status: false, error: {
+                                code: 500, message: 'Internal Server Error'
+                            }
+                        })
+                    }
+                }
+            },
+            error: function (data, status) {
+                console.log({
+                    status: false, error: {
+                        code: 404, message: 'Not Found SetUser form'
+                    }
+                })
             }
         })
-    } else if (($('.sel-1').val() === 'set-delete' || $('.sel-2').val() === 'set-delete') && selectedRows.length !== 0) {
+
+    } else if ((sel1 === 'set-delete' || sel2 === 'set-delete')) {
         if (confirm("CONFIRM DELETE")) {
             $.ajax({
-                url: "forms/delete.php",
+                url: "forms/setUser.php",
                 type: "post",
                 data: {
                     setDelete: selectedRows
                 },
                 success: function (data, status) {
                     displayData();
+                    let setDelete = JSON.parse(data)
+                    switch (setDelete.response) {
+                        case 200: {
+                            console.log({
+                                    status: true, error: null, selectedId: selectedRows, action: 'set-delete'
+                                }
+                            );
+                            break;
+                        }
+                        case 500: {
+                            console.log({
+                                status: false, error: {
+                                    code: 500, message: 'Internal Server Error'
+                                }
+                            })
+                        }
+                    }
+                },
+                error: function (data, status) {
+                    console.log({
+                        status: false, error: {
+                            code: 404, message: 'Not Found Delete form'
+                        }
+                    })
                 }
             })
         }

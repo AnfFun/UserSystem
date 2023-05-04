@@ -1,14 +1,13 @@
 <?php
 include_once '../connect.php';
 
-//extract($_POST);
 if (isset($_POST['hiddenData'])) {
     $uniqueId = $_POST['hiddenData'];
     $f_name = $_POST['updateFName'];
     $l_name = $_POST['updateLName'];
     $status = $_POST['updateStatus'];
     $role = $_POST['updateRole'];
-    if (!empty($f_name) && !empty($l_name) && !empty($role)) {
+    if (!empty($f_name) && !empty($l_name) && !empty($role) && !empty($status)) {
         $sql = "
     UPDATE `user`
     SET 
@@ -32,7 +31,5 @@ if (isset($_POST['hiddenData'])) {
     }
     echo json_encode($response);
 }
-
-
 
 ?>

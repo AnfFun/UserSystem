@@ -10,13 +10,14 @@ function displayData() {
         }, success: function (data, status) {
             $('#displayDataTable').html(data)
             console.log({
-                status: true, error: null, table: data
+                status: true, error: null, DisplayingTable: data
             })
         }, error: function (data, status) {
             console.log({
                 status: false, error: {
-                    code: 404, message: 'Not Found'
+                    code: 404, message: 'Not Found table displaying form'
                 }
+
             })
         }
 
@@ -71,7 +72,7 @@ function addUser() {
                 case 500: {
                     console.log({
                         status: false, error: {
-                            code: 500, message: 'User not added'
+                            code: 500, message: 'Internal Server Error'
                         }
                     })
                     break;
@@ -79,7 +80,7 @@ function addUser() {
                 case 422: {
                     console.log({
                         status: false, error: {
-                            code: 422, message: 'Fill all field'
+                            code: 422, message: 'Fill all field in User form'
                         },
                     })
                     break;
@@ -88,7 +89,7 @@ function addUser() {
         }, error: function (data, status) {
             console.log({
                 status: false, error: {
-                    code: 404, message: 'Not Found'
+                    code: 404, message: 'Not Found Add User form'
                 }
             })
         }
@@ -142,7 +143,7 @@ function updateUser() {
         }, error: function (data, status) {
             console.log({
                 status: false, error: {
-                    code: 404, message: 'Not Found'
+                    code: 404, message: 'Not Found Update User form'
                 }
             })
         }
@@ -173,7 +174,7 @@ function editUser(updateId) {
                 case 500: {
                     console.log({
                         status: false, error: {
-                            code: 500, message: 'User not displayed correctly'
+                            code: 500, message: 'Internal Server Error'
                         }
                     })
                 }
@@ -181,7 +182,7 @@ function editUser(updateId) {
         }, error: function (data, status) {
             console.log({
                 status: false, error: {
-                    code: 404, message: 'Not Found'
+                    code: 404, message: 'Not Found current User form'
                 }
             })
         }
@@ -213,6 +214,13 @@ function deleteUser(deleteId) {
                         break;
                     }
                 }
+            },
+            error: function (data, status) {
+                console.log({
+                    status: false, error: {
+                        code: 404, message: 'Not Found Delete form'
+                    }
+                })
             }
 
         })

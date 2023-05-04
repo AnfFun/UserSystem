@@ -17,13 +17,3 @@ if (isset($_POST['deleteSend'])) {
     }
     echo json_encode($response);
 }
-
-if (isset($_POST['setDelete'])){
-    $ids = $_POST['setDelete'];
-    $ids = implode(',',$ids);
-    $sql= "
-    DELETE FROM `user`
-    WHERE id IN ($ids)
-    ";
-    $result = mysqli_query($con,$sql);
-}
