@@ -45,6 +45,7 @@ function ed(updateId) {
 }
 
 function addUser() {
+
     let nameAdd = $('#first_name').val()
     let surnameAdd = $('#last_name').val()
     let statusAdd = $('#status').prop('checked') ? 'on' : 'off';
@@ -238,6 +239,7 @@ function clearFields() {
 }
 
 function userForm(title, btn) {
+    hideWarn()
     clearFields()
     $('#modal-title').text(title)
     $('#sus-btn').text(btn)
