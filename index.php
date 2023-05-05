@@ -30,7 +30,7 @@ include_once 'connect.php';
                                 <h6 class="mr-2"><span>Users</span></h6>
                             </div>
                             <div class="d-flex ">
-                                <button class="btn btn-sm btn-primary badge add-btn" type="button" data-toggle="modal" onclick="ed()" >
+                                <button class="btn btn-sm btn-primary badge add-btn" type="button" data-toggle="modal" onclick="ed()">
                                     Add User
                                 </button>
                                 <select class="form-control option sel-1 " name="option">
@@ -39,11 +39,11 @@ include_once 'connect.php';
                                     <option value="set-not-active">Set not active</option>
                                     <option value="set-delete">Delete</option>
                                 </select>
-                                <button class=" btn btn-sm btn-primary badge ok-btn" >OK</button>
+                                <button class=" btn btn-sm btn-primary badge ok-btn">OK</button>
                             </div>
                             <div id="displayDataTable"></div>
                             <div class="d-flex ">
-                                <button class="btn btn-sm btn-primary badge add-btn " type="button" data-toggle="modal" onclick="ed()" >
+                                <button class="btn btn-sm btn-primary badge add-btn " type="button" data-toggle="modal" onclick="ed()">
                                     Add User
                                 </button>
                                 <select class="form-control option sel-2 " name="option">
@@ -66,7 +66,7 @@ include_once 'connect.php';
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="modal-title"></h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <button type="button" class="close close-modal" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
@@ -95,19 +95,20 @@ include_once 'connect.php';
                                         <option value="User">User</option>
                                     </select>
                                 </div>
+                                <div class="form-group">
+                                    <p class="modal-msg"></p>
+                                </div>
                             </form>
                         </div>
                         <div class="modal-footer">
                             <input type="hidden" id="hiddenData">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-secondary close-modal"  data-dismiss="modal">Close</button>
                             <button type="button" class="btn btn-primary" id="sus-btn"></button>
-                            <p class="#modal-msg"></p>
                         </div>
 
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 

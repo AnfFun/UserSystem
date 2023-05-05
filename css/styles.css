@@ -1,75 +1,89 @@
-body{
-  margin-top:20px;
-  background:#f8f8f8
+body {
+    margin-top: 20px;
+    background: #f8f8f8
 }
+
 .active-circle {
-  color: green;
+    color: green;
 }
+
 .not-active-circle {
-  color: gray;
+    color: gray;
 }
+
 .switch {
-  position: relative;
-  display: inline-block;
-  width: 48px;
-  height: 24px;
+    position: relative;
+    display: inline-block;
+    width: 48px;
+    height: 24px;
 
 }
 
 .switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
+    opacity: 0;
+    width: 0;
+    height: 0;
 }
 
 .slider {
-  position: absolute;
-  cursor: pointer;
-  top: 3px;
-  left: 0;
-  right: 0;
-  bottom: -3px;
-  background-color: #ccc;
-  -webkit-transition: .4s;
-  transition: .4s;
-  border-radius: 24px;
+    position: absolute;
+    cursor: pointer;
+    top: 3px;
+    left: 0;
+    right: 0;
+    bottom: -3px;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+    border-radius: 24px;
 
 }
 
 .slider:before {
-  position: absolute;
-  content: "";
-  height: 16px;
-  width: 16px;
-  left: 4px;
-  bottom: 4px;
-  background-color: white;
-  -webkit-transition: .4s;
-  transition: .4s;
-  border-radius: 50%;
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+    border-radius: 50%;
 }
 
 input:checked + .slider {
-  background-color: #3cba54;
+    background-color: #3cba54;
 }
 
 input:focus + .slider {
-  box-shadow: 0 0 1px #3cba54;
+    box-shadow: 0 0 1px #3cba54;
 }
 
 input:checked + .slider:before {
-  -webkit-transform: translateX(24px);
-  -ms-transform: translateX(24px);
-  transform: translateX(24px);
+    -webkit-transform: translateX(24px);
+    -ms-transform: translateX(24px);
+    transform: translateX(24px);
 }
-.toogle-label{
-  width: 100%;
+
+.toogle-label {
+    width: 100%;
 }
-.role-lable{
-  width: 100%;
+
+.role-lable {
+    width: 100%;
 }
-.option{
-  width: 15%;
+
+.option {
+    width: 15%;
+}
+
+.modal-msg {
+    background: #b14d39;
+    text-align: center;
+    color: whitesmoke;
+    border-radius: 3px;
+
 }
 
 

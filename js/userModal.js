@@ -1,5 +1,6 @@
 $(document).ready(function () {
     displayData();
+
 })
 
 function displayData() {
@@ -48,20 +49,15 @@ function addUser() {
     let surnameAdd = $('#last_name').val()
     let statusAdd = $('#status').prop('checked') ? 'on' : 'off';
     let roleAdd = $('#role').val()
-
-    if (nameAdd === '' || surnameAdd === '' || statusAdd === '' || roleAdd === '') {
-        alert('Fill all field')
-    }
     $.ajax({
         url: "forms/addUser.php", type: "post", data: {
             first_name: nameAdd, last_name: surnameAdd, status: statusAdd, role: roleAdd,
         }, success: function (data, status) {
-            $('#user-modal').modal('hide')
             displayData()
-            clearFields()
             let a = JSON.parse(data)
             switch (a.status) {
                 case 200: {
+                    $('#user-modal').modal('hide')
                     console.log({
                         status: true, error: null, user: {
                             first_name: nameAdd, last_name: surnameAdd, status: statusAdd, role: roleAdd
@@ -70,6 +66,7 @@ function addUser() {
                     break;
                 }
                 case 500: {
+                    $('#user-modal').modal('hide')
                     console.log({
                         status: false, error: {
                             code: 500, message: 'Internal Server Error'
@@ -78,9 +75,11 @@ function addUser() {
                     break;
                 }
                 case 422: {
+                    $('.close-modal').attr('onclick', 'hideWarn()')
+                    $('.modal-msg').html('Fill all fields')
                     console.log({
                         status: false, error: {
-                            code: 422, message: 'Fill all field in User form'
+                            code: 422, message: 'Fill all fields in User form'
                         },
                     })
                     break;
@@ -102,19 +101,15 @@ function updateUser() {
     let updateStatus = $('#status').prop('checked') ? 'on' : 'off';
     let updateRole = $('#role').val()
     let hiddenData = $('#hiddenData').val()
-    if (updateFName === '' || updateLName === '' || updateStatus === '' || updateRole === '') {
-        alert('Fill all field')
-    }
     $.ajax({
         url: 'forms/update.php', type: "post", data: {
             updateFName: updateFName, updateLName: updateLName, updateStatus: updateStatus, updateRole: updateRole, hiddenData: hiddenData,
         }, success: function (data, status) {
-            $('#user-modal').modal('hide')
             displayData();
-            clearFields()
             let u = JSON.parse(data)
             switch (u.status) {
                 case 200: {
+                    $('#user-modal').modal('hide')
                     console.log({
                         status: true, error: null, updateUser: {
                             id: hiddenData, first_name: updateFName, last_name: updateLName, status: updateStatus, role: updateRole
@@ -124,6 +119,7 @@ function updateUser() {
                     break;
                 }
                 case 500: {
+                    $('#user-modal').modal('hide')
                     console.log({
                         status: false, error: {
                             code: 500, message: 'Internal Server Error'
@@ -132,6 +128,8 @@ function updateUser() {
                     break;
                 }
                 case 422: {
+                    $('.close-modal').attr('onclick', 'hideWarn()')
+                    $('.modal-msg').html('Fill all fields')
                     console.log({
                         status: false, error: {
                             code: 422, message: 'Fill all field'
@@ -240,6 +238,7 @@ function clearFields() {
 }
 
 function userForm(title, btn) {
+    clearFields()
     $('#modal-title').text(title)
     $('#sus-btn').text(btn)
     $("#user-modal").modal("show");
@@ -247,6 +246,10 @@ function userForm(title, btn) {
     //     status: true, error: null, displayForm: 'displayed'
     // })
 
+}
+
+function hideWarn() {
+    $('.modal-msg').html('')
 }
 
 
