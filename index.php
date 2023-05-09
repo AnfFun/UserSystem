@@ -31,20 +31,20 @@ include_once 'connect.php';
                             </div>
                             <div class="d-flex ">
                                 <button class="btn btn-sm btn-primary badge add-btn" type="button" data-toggle="modal" onclick="ed()">
-                                    Add User
+                                    Add
                                 </button>
                                 <select class="form-control option sel-1 " name="option">
                                     <option value="">-Please Select-</option>
-                                    <option value="set-active">Set active</option>
-                                    <option value="set-not-active">Set not active</option>
-                                    <option value="set-delete">Delete</option>
+                                    <option value="set-active">1.Set active</option>
+                                    <option value="set-not-active">2.Set not active</option>
+                                    <option value="set-delete">3.Delete</option>
                                 </select>
                                 <button class=" btn btn-sm btn-primary badge ok-btn">OK</button>
                             </div>
                             <div id="displayDataTable"></div>
                             <div class="d-flex ">
                                 <button class="btn btn-sm btn-primary badge add-btn " type="button" data-toggle="modal" onclick="ed()">
-                                    Add User
+                                    Add
                                 </button>
                                 <select class="form-control option sel-2 " name="option">
                                     <option value="">-Please Select-</option>

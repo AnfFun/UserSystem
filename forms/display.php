@@ -42,10 +42,10 @@ if (isset($_POST['displaySend'])) {
               </td>
                           <td class="text-nowrap align-middle">' . $first_name . ' ' . $last_name . ' </td>
                           <td class="text-nowrap align-middle"><span>' . $role . '</span></td> ';
-        if ($row['status'] == 'on') {
-            $table .= '<td class="text-center align-middle"><i class="fa fa-circle active-circle"></i></td>';
+        if ($row['status'] == 'off') {
+            $table .= '<td class="text-center align-middle"><i class="fa fa-circle circle"></i></td>';
         } else {
-            $table .= '<td class="text-center align-middle"><i class="fa fa-circle .not-active-circle"></i></td>';
+            $table .= '<td class="text-center align-middle"><i class="fa fa-circle circle-active"></i></td>';
         };
         $table .= '<td class="text-center align-middle">
                             <div class="btn - group align - top">
