@@ -2,11 +2,13 @@ body {
     margin-top: 20px;
     background: #f8f8f8
 }
+
+.circle.active {
+    color: green;
+}
+
 .circle {
     color: gray;
-}
-.circle-active {
-    color: green;
 }
 
 .switch {

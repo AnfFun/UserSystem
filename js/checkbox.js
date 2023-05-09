@@ -1,10 +1,11 @@
 $(document).ready(function () {
 
+
+
+
     let allItems = $("#all-items");
 
-
     let itemCheckboxes = $(".custom-control-input");
-
 
     allItems.change(function () {
         if ($(this).prop("checked")) {
@@ -14,7 +15,6 @@ $(document).ready(function () {
         }
     });
 
-
     itemCheckboxes.change(function () {
         if (itemCheckboxes.filter(":checked").length === itemCheckboxes.length) {
             allItems.prop("checked", true);
@@ -22,7 +22,8 @@ $(document).ready(function () {
             allItems.prop("checked", false);
         }
     });
-});
+})
+;
 
 $(document).off('click').on('click', '.ok-btn', function () {
     const numChecked = $('.select-checkbox:checked')
