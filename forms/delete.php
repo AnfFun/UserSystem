@@ -11,9 +11,15 @@ if (isset($_POST['deleteSend'])) {
     ";
     $result = mysqli_query($con,$sql);
     if ($result) {
-        $response['status'] = 200;
+        $response['status'] = true;
+        $response['error'] = null;
+        $response['id'] = $unique;
     } else {
-        $response['status'] = 500;
+        $response['status'] = false;
+        $response['error'] = [
+            'code' => 100,
+            'message' => 'User not deleted'
+        ];
     }
     echo json_encode($response);
 }

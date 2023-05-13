@@ -13,11 +13,22 @@ if (isset($_POST['setNotActive'])) {
     ";
     $result = mysqli_query($con, $sql);
     if ($result) {
-        $response['response'] = 200;
+        $response['status'] = true;
+        $response['error'] = null;
+        $response['users'] = [
+            'id' => $ids
+        ];
+
+
 
 
     } else {
-        $response['response'] = 500;
+        $response['status'] = false ;
+        $response['error'] = [
+            'code' => 100,
+            'message' => 'Status not changed'
+        ];
+
 
     }
     echo json_encode($response);
@@ -34,9 +45,22 @@ if (isset($_POST['setActive'])) {
     ";
     $result = mysqli_query($con, $sql);
     if ($result) {
-        $response['response'] = 200;
+        $response['status'] = true;
+        $response['error'] = null;
+        $response['users'] = [
+            'id' => $ids
+        ];
+
+
+
+
     } else {
-        $response['response'] = 500;
+        $response['status'] = false ;
+        $response['error'] = [
+            'code' => 100,
+            'message' => 'Status not changed'
+        ];
+
 
     }
     echo json_encode($response);
@@ -50,11 +74,22 @@ if (isset($_POST['setDelete'])) {
     ";
     $result = mysqli_query($con, $sql);
     if ($result) {
-        $response['response'] = 200;
+        $response['status'] = true;
+        $response['error'] = null;
+        $response['users'] = [
+            'id' => $ids
+        ];
+
+
 
 
     } else {
-        $response['response'] = 500;
+        $response['status'] = false ;
+        $response['error'] = [
+            'code' => 100,
+            'message' => 'Users not deleted'
+        ];
+
 
     }
     echo json_encode($response);

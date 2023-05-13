@@ -9,17 +9,24 @@ if (isset($_POST['updateId'])) {
     WHERE id='$userId'
     ";
     $result = mysqli_query($con, $sql);
-    $response = array();
 
     while ($row = mysqli_fetch_assoc($result)) {
-        $response = $row;
+        $response = [
+            'user' => $row
+        ];
 
     }
     if ($result) {
-        $response['response'] = 200;
+        $response['status'] = true;
+        $response['error'] = NULL;
 
     } else {
-        $response['response'] = 500;
+        $response['status'] = false;
+        $response['error'] = [
+            'code' => 100,
+            'message' => 'not found user'
+        ];
+
 
 
     }
