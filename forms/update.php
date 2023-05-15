@@ -26,6 +26,8 @@ if (isset($_POST['hiddenData'])) {
                 'id' => $uniqueId,
                 'first_name' => $f_name,
                 'last_name' => $l_name,
+                'role' => $role,
+                'status' => $status
             ];
         } else {
             $response['status'] = false;
@@ -38,7 +40,7 @@ if (isset($_POST['hiddenData'])) {
         $response['status'] = false;
         $response['error'] = [
             'code' => 100,
-            'message' => 'user not updated;'
+            'message' => 'user not updated'
         ];
 
 

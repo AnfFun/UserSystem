@@ -20,6 +20,8 @@ if (isset($first_name) && isset($last_name) && isset($role) && isset($status))
                 'id' => $id,
                 'first_name' => $first_name,
                 'last_name' => $last_name,
+                'role' => $role,
+                'status' => $status
             ];
         } else {
             $response['status'] = false;
