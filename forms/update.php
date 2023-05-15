@@ -26,8 +26,6 @@ if (isset($_POST['hiddenData'])) {
                 'id' => $uniqueId,
                 'first_name' => $f_name,
                 'last_name' => $l_name,
-                'role' => $role,
-                'status' => $status
             ];
         } else {
             $response['status'] = false;
