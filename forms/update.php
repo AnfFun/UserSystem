@@ -40,7 +40,7 @@ if (isset($_POST['hiddenData'])) {
         $response['status'] = false;
         $response['error'] = [
             'code' => 100,
-            'message' => 'user not updated; fill all fields'
+            'message' => 'user not updated;'
         ];
 
 

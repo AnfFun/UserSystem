@@ -36,7 +36,7 @@ if (isset($first_name) && isset($last_name) && isset($role) && isset($status))
         $response['status'] = false;
         $response['error'] = [
             'code' => 100,
-            'message' => 'user not added; FILL ALL FIELDS'
+            'message' => 'user not added'
         ];
 
     }

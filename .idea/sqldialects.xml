@@ -3,7 +3,6 @@
   <component name="SqlDialectMappings">
     <file url="file://$PROJECT_DIR$/forms/addUser.php" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/forms/delete.php" dialect="GenericSQL" />
-    <file url="file://$PROJECT_DIR$/forms/display.php" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/forms/edit.php" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/forms/setUser.php" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/forms/update.php" dialect="GenericSQL" />
