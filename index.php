@@ -37,7 +37,7 @@ include_once 'connect.php';
                                     <option value="set-not-active">2.Set not active</option>
                                     <option value="set-delete">3.Delete</option>
                                 </select>
-                                <button class=" btn btn-sm btn-primary badge ok-btn">OK</button>
+                                <button class=" btn btn-sm btn-primary badge ok-1">OK</button>
                             </div>
 
                             <div class="e-table">
@@ -112,7 +112,7 @@ include_once 'connect.php';
                                         <option value="set-not-active">2.Set not active</option>
                                         <option value="set-delete">3.Delete</option>
                                     </select>
-                                    <button class=" btn btn-sm btn-primary badge ok-btn">OK</button>
+                                    <button class=" btn btn-sm btn-primary badge ok-2">OK</button>
                                 </div>
                             </div>
                         </div>
@@ -341,28 +341,22 @@ include_once 'connect.php';
                             allItems.prop("checked", false);
                         }
                     });
-                })
-                ;
+                });
 
-                $(document).off('click').on('click', '.ok-btn', function () {
+                $(document).on('click', '.ok-1', function () {
                     const numChecked = $('.select-checkbox:checked')
                     const sel1 = $('.sel-1').val()
-                    const sel2 = $('.sel-2').val()
                     let selectedRows = numChecked.map(function () {
                         return $(this).val();
                     }).get();
 
-                    if (numChecked.length === 0 && (sel1 !== '' || sel2 !== '')) {
+                    if (numChecked.length === 0 && sel1 !== '') {
                         alert('Please pick at least one user');
 
-                    } else if (numChecked.length !== 0 && sel1 === '' && sel2 === '') {
+                    } else if (numChecked.length !== 0 && sel1 === '') {
                         alert('Please choose the option');
 
-                    } else if (sel1 !== sel2 && (sel1 !== '' && sel2 !== '')) {
-                        if (sel1 !== sel2) {
-                            $('.option').val('')
-                        }
-                    } else if (sel1 === 'set-active' || sel2 === 'set-active') {
+                    } else if (sel1 === 'set-active') {
                         $.ajax({
                             url: "forms/setUser.php",
                             type: "post",
@@ -378,7 +372,7 @@ include_once 'connect.php';
                             }
                         })
 
-                    } else if (sel1 === 'set-not-active' || sel2 === 'set-not-active') {
+                    } else if (sel1 === 'set-not-active') {
                         $.ajax({
                             url: "forms/setUser.php",
                             type: "post",
@@ -394,7 +388,71 @@ include_once 'connect.php';
                             }
                         })
 
-                    } else if ((sel1 === 'set-delete' || sel2 === 'set-delete')) {
+                    } else if (sel1 === 'set-delete') {
+                        if (confirm("CONFIRM DELETE")) {
+                            $.ajax({
+                                url: "forms/setUser.php",
+                                type: "post",
+                                data: {
+                                    setDelete: selectedRows
+                                },
+                                success: function (data, status) {
+                                    selectedRows.forEach(function (select) {
+                                        $("#tr-" + select).remove();
+                                    })
+                                    $('.check').prop("checked", false);
+                                    $("#all-items").prop("checked", false);
+                                }
+                            })
+                        }
+                    }
+                });
+                $(document).on('click', '.ok-2', function () {
+                    const numChecked = $('.select-checkbox:checked')
+                    const sel = $('.sel-2').val()
+                    let selectedRows = numChecked.map(function () {
+                        return $(this).val();
+                    }).get();
+
+                    if (numChecked.length === 0 && sel !== '') {
+                        alert('Please pick at least one user');
+
+                    } else if (numChecked.length !== 0 && sel === '') {
+                        alert('Please choose the option');
+
+                    } else if (sel === 'set-active') {
+                        $.ajax({
+                            url: "forms/setUser.php",
+                            type: "post",
+                            data: {
+                                setActive: selectedRows
+                            },
+                            success: function (data, status) {
+                                selectedRows.forEach(function (select) {
+                                    $('#status-' + select).addClass('active')
+                                })
+                                $('.check').prop("checked", false);
+                                $("#all-items").prop("checked", false);
+                            }
+                        })
+
+                    } else if (sel === 'set-not-active') {
+                        $.ajax({
+                            url: "forms/setUser.php",
+                            type: "post",
+                            data: {
+                                setNotActive: selectedRows
+                            },
+                            success: function (data, status) {
+                                selectedRows.forEach(function (select) {
+                                    $('#status-' + select).removeClass('active')
+                                })
+                                $('.check').prop("checked", false);
+                                $("#all-items").prop("checked", false);
+                            }
+                        })
+
+                    } else if (sel === 'set-delete') {
                         if (confirm("CONFIRM DELETE")) {
                             $.ajax({
                                 url: "forms/setUser.php",
