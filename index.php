@@ -227,10 +227,12 @@ include_once 'connect.php';
                     </tbody>
                 `;
                                 $('.table.table-bordered').append(newRow);
+                                $('#all-items').prop('checked', false);
                             } else if (response.status === false && response.error.code === 100) {
                                 $('.modal-msg').html('PLEASE FILL ALL FIELDS');
                             }
                         }
+
                     });
                 }
 
@@ -317,6 +319,7 @@ include_once 'connect.php';
                 }
 
                 $(document).ready(function () {
+                    $('#all-items').prop('checked', false);
                     $(document).on('change', '#all-items', function () {
                         if ($(this).prop("checked")) {
                             $('.check').prop("checked", true);
