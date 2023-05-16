@@ -317,16 +317,7 @@ include_once 'connect.php';
                 }
 
                 $(document).ready(function () {
-
-                    let allItems = $("#all-items");
-
-                    function updateCheck() {
-
-                    }
-
-                    // let itemCheckboxes = $(".check");
-
-                    allItems.change(function () {
+                    $(document).on('change', '#all-items', function () {
                         if ($(this).prop("checked")) {
                             $('.check').prop("checked", true);
                         } else {
@@ -334,14 +325,15 @@ include_once 'connect.php';
                         }
                     });
 
-                    $('.check').change(function () {
-                        if ($('.check').filter(":checked").length === $('.check').length) {
-                            allItems.prop("checked", true);
+                    $(document).on('change', '.check', function () {
+                        if ($('.check:checked').length === $('.check').length) {
+                            $("#all-items").prop("checked", true);
                         } else {
-                            allItems.prop("checked", false);
+                            $("#all-items").prop("checked", false);
                         }
                     });
                 });
+
 
                 $(document).on('click', '.ok-1', function () {
                     const numChecked = $('.select-checkbox:checked')
