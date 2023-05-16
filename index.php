@@ -33,9 +33,9 @@ include_once 'connect.php';
                                 </button>
                                 <select class="form-control option sel-1 " name="option">
                                     <option value="">-Please Select-</option>
-                                    <option value="set-active">1.Set active</option>
-                                    <option value="set-not-active">2.Set not active</option>
-                                    <option value="set-delete">3.Delete</option>
+                                    <option value="set-active">Set active</option>
+                                    <option value="set-not-active">Set not active</option>
+                                    <option value="set-delete">Delete</option>
                                 </select>
                                 <button class=" btn btn-sm btn-primary badge ok-1">OK</button>
                             </div>
@@ -93,7 +93,8 @@ include_once 'connect.php';
                                                             onclick="ed(<?= $id ?>)">Edit
                                                     </button>
 
-                                                    <button class="btn btn-sm btn-outline-secondary badge" onclick="deleteUser(<?= $id ?>)" type="button"><i
+                                                    <button class="btn btn-sm btn-outline-secondary badge" onclick="showDeleteConfirmation(<?= $id ?>)"
+                                                            type="button"><i
                                                                 class="fa fa-trash"></i></button>
                                                 </div>
                                                 <?php
@@ -108,15 +109,16 @@ include_once 'connect.php';
                                     <button class="btn btn-sm btn-primary badge add-btn " type="button" data-toggle="modal" onclick="displayAdd()">Add</button>
                                     <select class="form-control option sel-2 " name="option">
                                         <option value="">-Please Select-</option>
-                                        <option value="set-active">1.Set active</option>
-                                        <option value="set-not-active">2.Set not active</option>
-                                        <option value="set-delete">3.Delete</option>
+                                        <option value="set-active">Set active</option>
+                                        <option value="set-not-active">Set not active</option>
+                                        <option value="set-delete">Delete</option>
                                     </select>
                                     <button class=" btn btn-sm btn-primary badge ok-2">OK</button>
                                 </div>
                             </div>
                         </div>
                     </div>
+
                     <!-- User Modal Form  -->
 
                     <div class="modal fade" id="user-modal" tabindex="-1" aria-labelledby="user-form-modal"
@@ -168,6 +170,46 @@ include_once 'connect.php';
                             </div>
                         </div>
                     </div>
+                    <!--Delete Modal-->
+                    <div class="modal fade" id="delete-modal" tabindex="-1" aria-labelledby="delete-modal-title" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="delete-modal-title">Delete Confirmation</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    Are you sure you want to delete this user?
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                    <button type="button" class="btn btn-danger" id="confirm-delete">Delete</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Alert Modal-->
+                    <div class="modal fade" id="alert-modal" tabindex="-1" role="dialog">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Warning</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p class="modal-body-alert"></p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
             <script>
@@ -187,8 +229,6 @@ include_once 'connect.php';
                     let surnameAdd = $('#last_name').val();
                     let statusAdd = $('#status').prop('checked') ? 'on' : 'off';
                     let roleAdd = $('#role').val();
-
-
                     $.ajax({
                         url: "forms/addUser.php",
                         type: "post",
@@ -220,7 +260,8 @@ include_once 'connect.php';
                             <td class="text-center align-middle">
                                 <div class="btn-group align-top">
                                     <button class="btn btn-sm btn-outline-secondary badge" id="up-btn-${response.user.id}" type="button" data-toggle="modal" onclick="ed(${response.user.id})">Edit</button>
-                                    <button class="btn btn-sm btn-outline-secondary badge" onclick="deleteUser(${response.user.id})" type="button"><i class="fa fa-trash"></i></button>
+                                    <button class="btn btn-sm btn-outline-secondary badge" onclick="showDeleteConfirmation(${response.user.id})" type="button"><i class="fa
+                                    fa-trash"></i></button>
                                 </div>
                             </td>
                         </tr>
@@ -282,19 +323,29 @@ include_once 'connect.php';
 
                 }
 
-                function deleteUser(deleteId) {
-                    if (confirm("CONFIRM DELETE")) {
-                        $.ajax({
-                            url: "forms/delete.php",
-                            type: "post",
-                            data: {
-                                deleteSend: deleteId
-                            },
-                            success: function (data, status) {
-                                $("#tr-" + deleteId).remove();
-                            }
-                        });
-                    }
+
+                function showDeleteConfirmation(deleteId) {
+                    $('#delete-modal').modal('show');
+                    $('#confirm-delete').data('delete-id', deleteId);
+                }
+
+                $(document).on('click', '#confirm-delete', function () {
+                    let deleteId = $(this).data('delete-id');
+                    deleteConfirmed(deleteId);
+                    $('#delete-modal').modal('hide');
+                });
+
+                function deleteConfirmed(deleteId) {
+                    $.ajax({
+                        url: "forms/delete.php",
+                        type: "post",
+                        data: {
+                            deleteSend: deleteId
+                        },
+                        success: function (data, status) {
+                            $("#tr-" + deleteId).remove();
+                        }
+                    });
                 }
 
 
@@ -310,7 +361,9 @@ include_once 'connect.php';
                     $('#modal-title').text(title)
                     $('#sus-btn').text(btn)
                     $("#user-modal").modal("show");
+                }
 
+                function alertForm(title, msg) {
 
                 }
 
@@ -346,10 +399,12 @@ include_once 'connect.php';
                     }).get();
 
                     if (numChecked.length === 0 && sel1 !== '') {
-                        alert('Please pick at least one user');
+                        $('.modal-body-alert').html('Please pick at least one User')
+                        $('#alert-modal').modal('show')
 
                     } else if (numChecked.length !== 0 && sel1 === '') {
-                        alert('Please choose the option');
+                        $('.modal-body-alert').html('Please choose the option')
+                        $('#alert-modal').modal('show')
 
                     } else if (sel1 === 'set-active') {
                         $.ajax({
@@ -384,7 +439,9 @@ include_once 'connect.php';
                         })
 
                     } else if (sel1 === 'set-delete') {
-                        if (confirm("CONFIRM DELETE")) {
+                        $('#delete-modal').modal('show')
+                        $('#confirm-delete').attr('id', 'user-set-delete');
+                        $(document).off('click', '#user-set-delete').on('click', '#user-set-delete', function () {
                             $.ajax({
                                 url: "forms/setUser.php",
                                 type: "post",
@@ -399,7 +456,8 @@ include_once 'connect.php';
                                     $("#all-items").prop("checked", false);
                                 }
                             })
-                        }
+                            $('#delete-modal').modal('hide');
+                        });
                     }
                 });
                 $(document).on('click', '.ok-2', function () {
@@ -410,11 +468,12 @@ include_once 'connect.php';
                     }).get();
 
                     if (numChecked.length === 0 && sel !== '') {
-                        alert('Please pick at least one user');
+                        $('.modal-body-alert').html('Please pick at least one User')
+                        $('#alert-modal').modal('show')
 
                     } else if (numChecked.length !== 0 && sel === '') {
-                        alert('Please choose the option');
-
+                        $('.modal-body-alert').html('Please choose the option')
+                        $('#alert-modal').modal('show')
                     } else if (sel === 'set-active') {
                         $.ajax({
                             url: "forms/setUser.php",
@@ -448,7 +507,9 @@ include_once 'connect.php';
                         })
 
                     } else if (sel === 'set-delete') {
-                        if (confirm("CONFIRM DELETE")) {
+                        $('#delete-modal').modal('show')
+                        $('#confirm-delete').attr('id', 'user-set-delete');
+                        $(document).off('click', '#user-set-delete').on('click', '#user-set-delete', function () {
                             $.ajax({
                                 url: "forms/setUser.php",
                                 type: "post",
@@ -463,7 +524,8 @@ include_once 'connect.php';
                                     $("#all-items").prop("checked", false);
                                 }
                             })
-                        }
+                            $('#delete-modal').modal('hide');
+                        });
                     }
                 });
             </script>
