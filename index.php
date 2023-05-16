@@ -181,7 +181,7 @@ include_once 'connect.php';
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    Are you sure you want to delete this user?
+                                    <p class="modal-body-delete"></p>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
@@ -325,6 +325,7 @@ include_once 'connect.php';
 
 
                 function showDeleteConfirmation(deleteId) {
+                    $('.modal-body-delete').html('Are you sure you want to delete the user?')
                     $('#delete-modal').modal('show');
                     $('#confirm-delete').data('delete-id', deleteId);
                 }
@@ -440,6 +441,7 @@ include_once 'connect.php';
 
                     } else if (sel1 === 'set-delete') {
                         $('#delete-modal').modal('show')
+                        $('.modal-body-delete').html('Are you sure you want to delete this users?')
                         $('#confirm-delete').attr('id', 'user-set-delete');
                         $(document).off('click', '#user-set-delete').on('click', '#user-set-delete', function () {
                             $.ajax({
@@ -508,6 +510,7 @@ include_once 'connect.php';
 
                     } else if (sel === 'set-delete') {
                         $('#delete-modal').modal('show')
+                        $('.modal-body-delete').html('Are you sure you want to delete this users?')
                         $('#confirm-delete').attr('id', 'user-set-delete');
                         $(document).off('click', '#user-set-delete').on('click', '#user-set-delete', function () {
                             $.ajax({
