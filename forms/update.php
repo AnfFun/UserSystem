@@ -38,11 +38,27 @@ if (isset($_POST['hiddenData'])) {
         }
     } else {
         $response['status'] = false;
-        $response['error'] = [
-            'code' => 100,
-            'message' => 'user not updated'
-        ];
-
+        if (empty($f_name)){
+            $response['error'] = [
+                'code' => 100,
+                'message' => 'user not updated; Please fill first-name'
+            ];
+        } elseif (empty($l_name)) {
+            $response['error'] = [
+                'code' => 100,
+                'message' => 'user not updated; Please fill last-name'
+            ];
+        }  elseif (empty($role)) {
+            $response['error'] = [
+                'code' => 100,
+                'message' => 'user not updated; Please fill role'
+            ];
+        } elseif (empty($status)) {
+            $response['error'] = [
+                'code' => 100,
+                'message' => 'user not updated; Please fill status'
+            ];
+        }
 
     }
     header('Content-Type: application/json');

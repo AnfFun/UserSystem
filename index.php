@@ -481,15 +481,17 @@ include_once 'connect.php';
                     let selectedRows = numChecked.map(function () {
                         return $(this).val();
                     }).get();
-
-                    if (numChecked.length === 0 && sel !== '') {
+                    if (numChecked.length === 0 && sel2 !== '') {
                         $('.modal-body-alert').html('Please pick at least one User')
                         $('#alert-modal').modal('show')
 
-                    } else if (numChecked.length !== 0 && sel === '') {
+                    } else if (numChecked.length !== 0 && sel2 === '') {
                         $('.modal-body-alert').html('Please choose the option')
                         $('#alert-modal').modal('show')
-                    } else if (sel === 'set-active') {
+                    } else if (numChecked.length === 0 && sel2 === '') {
+                        $('.modal-body-alert').html('Please pick at least one User and choose an option');
+                        $('#alert-modal').modal('show');
+                    } else if (sel2 === 'set-active') {
                         $.ajax({
                             url: "forms/setUser.php",
                             type: "post",
@@ -505,7 +507,7 @@ include_once 'connect.php';
                             }
                         })
 
-                    } else if (sel === 'set-not-active') {
+                    } else if (sel2 === 'set-not-active') {
                         $.ajax({
                             url: "forms/setUser.php",
                             type: "post",
@@ -521,7 +523,7 @@ include_once 'connect.php';
                             }
                         })
 
-                    } else if (sel === 'set-delete') {
+                    } else if (sel2 === 'set-delete') {
                         $('#delete-modal').modal('show')
                         $('.modal-body-delete').html('Are you sure you want to delete this users?')
                         $('#confirm-delete').attr('id', 'user-set-delete');
