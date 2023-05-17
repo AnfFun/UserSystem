@@ -45,6 +45,7 @@ if (isset($_POST['hiddenData'])) {
 
 
     }
+    header('Content-Type: application/json');
     echo json_encode($response);
 }
 

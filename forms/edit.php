@@ -30,6 +30,7 @@ if (isset($_POST['updateId'])) {
 
 
     }
+    header('Content-Type: application/json');
     echo json_encode($response);
 
 }

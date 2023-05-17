@@ -9,7 +9,7 @@ if (isset($_POST['deleteSend'])) {
     WHERE
         id = '$unique'
     ";
-    $result = mysqli_query($con,$sql);
+    $result = mysqli_query($con, $sql);
     if ($result) {
         $response['status'] = true;
         $response['error'] = null;
@@ -21,5 +21,7 @@ if (isset($_POST['deleteSend'])) {
             'message' => 'User not deleted'
         ];
     }
+    header('Content-Type: application/json');
+
     echo json_encode($response);
 }

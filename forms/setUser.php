@@ -31,6 +31,7 @@ if (isset($_POST['setNotActive'])) {
 
 
     }
+    header('Content-Type: application/json');
     echo json_encode($response);
 }
 if (isset($_POST['setActive'])) {
@@ -63,6 +64,7 @@ if (isset($_POST['setActive'])) {
 
 
     }
+    header('Content-Type: application/json');
     echo json_encode($response);
 }
 if (isset($_POST['setDelete'])) {
@@ -92,6 +94,7 @@ if (isset($_POST['setDelete'])) {
 
 
     }
+    header('Content-Type: application/json');
     echo json_encode($response);
 
 }

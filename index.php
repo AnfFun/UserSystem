@@ -93,7 +93,7 @@ include_once 'connect.php';
                                                             onclick="ed(<?= $id ?>)">Edit
                                                     </button>
 
-                                                    <button class="btn btn-sm btn-outline-secondary badge" onclick="showDeleteConfirmation(<?= $id ?>)"
+                                                    <button class="btn btn-sm btn-outline-secondary badge" onclick="showDeleteConfirmation(<?= $id ?>, '<?= $first_name ?>', '<?= $last_name ?>')"
                                                             type="button"><i
                                                                 class="fa fa-trash"></i></button>
                                                 </div>
@@ -224,11 +224,13 @@ include_once 'connect.php';
                     $('#sus-btn').attr('onclick', 'addUser()');
                 }
 
+
                 function addUser() {
                     let nameAdd = $('#first_name').val();
                     let surnameAdd = $('#last_name').val();
                     let statusAdd = $('#status').prop('checked') ? 'on' : 'off';
                     let roleAdd = $('#role').val();
+
                     $.ajax({
                         url: "forms/addUser.php",
                         type: "post",
@@ -238,30 +240,28 @@ include_once 'connect.php';
                             status: statusAdd,
                             role: roleAdd,
                         },
-                        success: function (data, status) {
-                            let response = JSON.parse(data);
+                        dataType: 'json',
+                        success: function(response) {
                             if (response.status === true) {
                                 $('#user-modal').modal('hide');
                                 let newRow = `
                     <tbody>
-                        <tr id="tr-${response.user.id}" ">
+                        <tr id="tr-${response.user.id}">
                             <td class="align-middle">
                                 <div class="custom-control custom-control-inline custom-checkbox custom-control-nameless m-0 align-top">
-                                    <input type="checkbox" class="custom-control-input select-checkbox check" value="${response.user.id}" id="item-${response
-                                    .user.id}">
+                                    <input type="checkbox" class="custom-control-input select-checkbox check" value="${response.user.id}" id="item-${response.user.id}">
                                     <label class="custom-control-label" for="item-${response.user.id}"></label>
                                 </div>
                             </td>
                             <td class="text-nowrap align-middle name-${response.user.id}">${response.user.first_name} ${response.user.last_name}</td>
                             <td class="text-nowrap align-middle role-${response.user.id}"><span>${response.user.role}</span></td>
-                            <td  class="text-center align-middle"><i id="status-${response.user.id}" class="fa fa-circle  circle ${response.user.status === 'on' ?
-                                    'active' :
-                                    ''}"></i></td>
+                            <td class="text-center align-middle"><i id="status-${response.user.id}" class="fa fa-circle circle ${response.user.status === 'on' ? 'active' : ''}"></i></td>
                             <td class="text-center align-middle">
                                 <div class="btn-group align-top">
                                     <button class="btn btn-sm btn-outline-secondary badge" id="up-btn-${response.user.id}" type="button" data-toggle="modal" onclick="ed(${response.user.id})">Edit</button>
-                                    <button class="btn btn-sm btn-outline-secondary badge" onclick="showDeleteConfirmation(${response.user.id})" type="button"><i class="fa
-                                    fa-trash"></i></button>
+                                    <button class="btn btn-sm btn-outline-secondary badge" onclick="showDeleteConfirmation(${response.user.id},${response
+                                    .user.first_name},${response.user.last_name})"
+                                    type="button"><i class="fa fa-trash"></i></button>
                                 </div>
                             </td>
                         </tr>
@@ -272,10 +272,13 @@ include_once 'connect.php';
                             } else if (response.status === false && response.error.code === 100) {
                                 $('.modal-msg').html('PLEASE FILL ALL FIELDS');
                             }
+                        },
+                        error: function(xhr, status, error) {
+                            console.log(error);
                         }
-
                     });
                 }
+
 
 
                 function updateUser(updateId) {
@@ -287,8 +290,8 @@ include_once 'connect.php';
                     $.ajax({
                         url: 'forms/update.php', type: "post", data: {
                             updateFName: updateFName, updateLName: updateLName, updateStatus: updateStatus, updateRole: updateRole, hiddenData: hiddenData,
-                        }, success: function (data, status) {
-                            let response = JSON.parse(data)
+
+                        }, success: function (response) {
                             if (response.status === true) {
                                 $('#user-modal').modal('hide')
                                 $('.name-' + updateId).html(updateFName + ' ' + updateLName)
@@ -302,6 +305,9 @@ include_once 'connect.php';
                             } else if (response.status === false && response.error.code === 100) {
                                 $('.modal-msg').html('PLEASE FILL ALL FIELDS')
                             }
+                        },
+                        error: function(xhr, status, error) {
+                            console.log(error);
                         }
                     });
 
@@ -312,23 +318,27 @@ include_once 'connect.php';
                     $.ajax({
                         url: 'forms/edit.php', type: "post", data: {
                             updateId: updateId
-                        }, success: function (data, status) {
-                            let userid = JSON.parse(data)
+                        },
+                        dataType: 'json',
+                        success: function (userid) {
                             $('#first_name').val(userid.user.first_name);
                             $('#last_name').val(userid.user.last_name);
                             $('#role').val(userid.user.role);
                             $('#status').prop('checked', userid.user.status === 'on').change();
+                        },
+                        error: function(xhr, status, error) {
+                            console.log(error);
                         }
                     });
 
                 }
 
-
-                function showDeleteConfirmation(deleteId) {
-                    $('.modal-body-delete').html('Are you sure you want to delete the user?')
+                function showDeleteConfirmation(deleteId, firstName,lastName) {
+                    $('.modal-body-delete').html('Are you sure you want to delete'+ ' ' + firstName + ' ' + lastName)
                     $('#delete-modal').modal('show');
                     $('#confirm-delete').data('delete-id', deleteId);
                 }
+
 
                 $(document).on('click', '#confirm-delete', function () {
                     let deleteId = $(this).data('delete-id');
@@ -390,8 +400,6 @@ include_once 'connect.php';
                         }
                     });
                 });
-
-
                 $(document).on('click', '.ok-1', function () {
                     const numChecked = $('.select-checkbox:checked')
                     const sel1 = $('.sel-1').val()
@@ -407,7 +415,12 @@ include_once 'connect.php';
                         $('.modal-body-alert').html('Please choose the option')
                         $('#alert-modal').modal('show')
 
-                    } else if (sel1 === 'set-active') {
+                    }
+                    else if (numChecked.length === 0 && sel1 === ''){
+                        $('.modal-body-alert').html('Please pick at least one User and choose an option');
+                        $('#alert-modal').modal('show');
+                    }
+                    else if (sel1 === 'set-active') {
                         $.ajax({
                             url: "forms/setUser.php",
                             type: "post",
@@ -464,7 +477,7 @@ include_once 'connect.php';
                 });
                 $(document).on('click', '.ok-2', function () {
                     const numChecked = $('.select-checkbox:checked')
-                    const sel = $('.sel-2').val()
+                    const sel2 = $('.sel-2').val()
                     let selectedRows = numChecked.map(function () {
                         return $(this).val();
                     }).get();
