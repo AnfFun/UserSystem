@@ -18,7 +18,7 @@ if (isset($_POST['deleteSend'])) {
         $response['status'] = false;
         $response['error'] = [
             'code' => 100,
-            'message' => 'User not deleted'
+            'message' => 'User not deleted, Internal server error'
         ];
     }
     header('Content-Type: application/json');

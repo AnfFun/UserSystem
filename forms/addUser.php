@@ -2,9 +2,7 @@
 include_once '../connect.php';
 
 extract($_POST);
-
-if (isset($first_name) && isset($last_name) && isset($role) && isset($status))
-    if (!empty($first_name) && !empty($last_name) && !empty($role) && !empty($status)) {
+    if (!empty($first_name) && !empty($last_name) && !empty($role)  && ($status == 0 || $status == 1)) {
         $sql = "INSERT INTO `user`
             (first_name,last_name,role,status)
         VALUES 
@@ -12,7 +10,6 @@ if (isset($first_name) && isset($last_name) && isset($role) && isset($status))
         ";
         $result = mysqli_query($con, $sql);
         $id = mysqli_insert_id($con);
-
         if ($result) {
             $response['status'] = true;
             $response['error'] = null;
@@ -20,43 +17,42 @@ if (isset($first_name) && isset($last_name) && isset($role) && isset($status))
                 'id' => $id,
                 'first_name' => $first_name,
                 'last_name' => $last_name,
-                'role' => $role,
-                'status' => $status
+                'role' => (int)$role,
+                'status' => (int)$status
             ];
         } else {
             $response['status'] = false;
             $response['error'] = [
                 'code' => 500,
-                'message' => 'user not added'
+                'message' => 'User not added, Internal server error '
             ];
 
         }
 
     } else {
         $response['status'] = false;
-        if (empty($first_name)){
+        if (empty($first_name)) {
             $response['error'] = [
                 'code' => 100,
-                'message' => 'user not added; Please fill first-name'
+                'message' => 'Usser not added, Please fill first-name'
             ];
         } elseif (empty($last_name)) {
             $response['error'] = [
                 'code' => 100,
-                'message' => 'user not added; Please last-name'
+                'message' => 'User not added, Please fill last-name'
             ];
-        }  elseif (empty($role)) {
+        } elseif (empty($role)) {
             $response['error'] = [
                 'code' => 100,
-                'message' => 'user not added; Please fill role'
+                'message' => 'User not added, Please fill role'
             ];
         } elseif (empty($status)) {
             $response['error'] = [
                 'code' => 100,
-                'message' => 'user not added; Please fill status'
+                'message' => 'User not added, Please fill status'
             ];
         }
-
-    }
+}
 header('Content-Type: application/json');
 
 echo json_encode($response);

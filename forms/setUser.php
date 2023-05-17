@@ -3,7 +3,7 @@ include_once '../connect.php';
 
 if (isset($_POST['setNotActive'])) {
     $ids = $_POST['setNotActive'];
-    $status = "off";
+    $status = 0;
     $ids = implode(',', $ids);
     $sql = "
     UPDATE `user`
@@ -36,7 +36,7 @@ if (isset($_POST['setNotActive'])) {
 }
 if (isset($_POST['setActive'])) {
     $ids = $_POST['setActive'];
-    $status = "on";
+    $status = 1;
     $ids = implode(',', $ids);
     $sql = "
     UPDATE `user`
@@ -51,10 +51,6 @@ if (isset($_POST['setActive'])) {
         $response['users'] = [
             'id' => $ids
         ];
-
-
-
-
     } else {
         $response['status'] = false ;
         $response['error'] = [
@@ -81,10 +77,6 @@ if (isset($_POST['setDelete'])) {
         $response['users'] = [
             'id' => $ids
         ];
-
-
-
-
     } else {
         $response['status'] = false ;
         $response['error'] = [

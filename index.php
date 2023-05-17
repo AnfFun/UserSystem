@@ -1,5 +1,9 @@
 <?php
 include_once 'connect.php';
+$roles = [
+        1 => 'Admin',
+        2 => 'User'
+]
 ?>
 
 <!DOCTYPE html>
@@ -77,15 +81,9 @@ include_once 'connect.php';
                                                     <label class="custom-control-label" for="item-<?= $id ?>"></label>
                                                 </div>
                                             </td>
-                                            <td class="text-nowrap align-middle name-<?= $id ?>"><?= $first_name . ' ' . $last_name ?></td>
-                                            <td class="text-nowrap align-middle role-<?= $id ?>"><span><?= $role ?><span></td>
-                                            <?php
-                                            if ($row['status'] == 'on') {
-                                                echo '<td class="text-center align-middle"><i id="status-' . $id . '"  class="fa fa-circle  circle active"></i></td>';
-                                            } else {
-                                                echo '<td  class="text-center align-middle "><i id="status-' . $id . '" class="fa fa-circle status-' . $id . ' circle"></i></td>';
-                                            };
-                                            ?>
+                                            <td class="text-nowrap align-middle " id="name-<?= $id ?>"><?= $first_name . ' ' . $last_name ?></td>
+                                            <td class="text-nowrap align-middle " id="role-<?= $id ?>"><span><?= $roles[$role] ?><span></td>
+                                            <td class="text-center align-middle"><i id="status-<?=$id?>" class="fa fa-circle circle <?= $status ? 'active' : '' ?>"></i></td>
                                             <td class="text-center align-middle">
                                                 <div class="btn-group align-top">
                                                     <button class="btn btn-sm btn-outline-secondary badge" id="up-btn-<?= $id ?>" type="button"
@@ -93,7 +91,8 @@ include_once 'connect.php';
                                                             onclick="ed(<?= $id ?>)">Edit
                                                     </button>
 
-                                                    <button class="btn btn-sm btn-outline-secondary badge" onclick="showDeleteConfirmation(<?= $id ?>, '<?= $first_name ?>', '<?= $last_name ?>')"
+                                                    <button class="btn btn-sm btn-outline-secondary badge"
+                                                            onclick="showDeleteConfirmation(<?= $id ?>, '<?= $first_name ?>', '<?= $last_name ?>')"
                                                             type="button"><i
                                                                 class="fa fa-trash"></i></button>
                                                 </div>
@@ -152,8 +151,8 @@ include_once 'connect.php';
                                             <label for="role" class="role-lable">Role</label>
                                             <select class="form-control" name="role" id="role">
                                                 <option value="">-Please Select-</option>
-                                                <option value="Admin">Admin</option>
-                                                <option value="User">User</option>
+                                                <option value=1 >Admin</option>
+                                                <option value=2 >User</option>
                                             </select>
                                         </div>
                                         <div class="form-group">
@@ -213,6 +212,11 @@ include_once 'connect.php';
                 </div>
             </div>
             <script>
+                let roles = {
+                    1: "Admin",
+                    2: "User",
+                }
+
                 function ed(updateId) {
                     userForm('Update User', 'Update');
                     editUser(updateId);
@@ -228,7 +232,7 @@ include_once 'connect.php';
                 function addUser() {
                     let nameAdd = $('#first_name').val();
                     let surnameAdd = $('#last_name').val();
-                    let statusAdd = $('#status').prop('checked') ? 'on' : 'off';
+                    let statusAdd = $('#status').prop('checked') ? 1 : 0;
                     let roleAdd = $('#role').val();
 
                     $.ajax({
@@ -241,7 +245,7 @@ include_once 'connect.php';
                             role: roleAdd,
                         },
                         dataType: 'json',
-                        success: function(response) {
+                        success: function (response) {
                             if (response.status === true) {
                                 $('#user-modal').modal('hide');
                                 let newRow = `
@@ -253,14 +257,15 @@ include_once 'connect.php';
                                     <label class="custom-control-label" for="item-${response.user.id}"></label>
                                 </div>
                             </td>
-                            <td class="text-nowrap align-middle name-${response.user.id}">${response.user.first_name} ${response.user.last_name}</td>
-                            <td class="text-nowrap align-middle role-${response.user.id}"><span>${response.user.role}</span></td>
-                            <td class="text-center align-middle"><i id="status-${response.user.id}" class="fa fa-circle circle ${response.user.status === 'on' ? 'active' : ''}"></i></td>
+                            <td class="text-nowrap align-middle" id="name-${response.user.id}">${response.user.first_name} ${response.user.last_name}</td>
+                            <td class="text-nowrap align-middle" id="role-${response.user.id}"><span>${roles[response.user
+                                    .role]}</span></td>
+                            <td class="text-center align-middle"><i id="status-${response.user.id}" class="fa fa-circle circle ${response.user.status  ? 'active' : ''}"></i></td>
                             <td class="text-center align-middle">
                                 <div class="btn-group align-top">
                                     <button class="btn btn-sm btn-outline-secondary badge" id="up-btn-${response.user.id}" type="button" data-toggle="modal" onclick="ed(${response.user.id})">Edit</button>
-                                    <button class="btn btn-sm btn-outline-secondary badge" onclick="showDeleteConfirmation(${response.user.id},${response
-                                    .user.first_name},${response.user.last_name})"
+                                    <button class="btn btn-sm btn-outline-secondary badge" onclick="showDeleteConfirmation(${response.user.id}, '${response
+                                    .user.first_name}','${response.user.last_name}')"
                                     type="button"><i class="fa fa-trash"></i></button>
                                 </div>
                             </td>
@@ -273,18 +278,17 @@ include_once 'connect.php';
                                 $('.modal-msg').html('PLEASE FILL ALL FIELDS');
                             }
                         },
-                        error: function(xhr, status, error) {
+                        error: function (xhr, status, error) {
                             console.log(error);
                         }
                     });
                 }
 
 
-
                 function updateUser(updateId) {
                     let updateFName = $('#first_name').val()
                     let updateLName = $('#last_name').val()
-                    let updateStatus = $('#status').prop('checked') ? 'on' : 'off';
+                    let updateStatus = $('#status').prop('checked') ? 1 : 0;
                     let updateRole = $('#role').val()
                     let hiddenData = $('#hiddenData').val()
                     $.ajax({
@@ -292,21 +296,21 @@ include_once 'connect.php';
                             updateFName: updateFName, updateLName: updateLName, updateStatus: updateStatus, updateRole: updateRole, hiddenData: hiddenData,
 
                         }, success: function (response) {
-                            if (response.status === true) {
+                            if (response.status) {
                                 $('#user-modal').modal('hide')
-                                $('.name-' + updateId).html(updateFName + ' ' + updateLName)
-                                $('.role-' + updateId).html(updateRole)
-                                if (updateStatus === 'on') {
+                                $('#name-' + updateId).html(updateFName + ' ' + updateLName)
+                               $('#role-' + updateId).html(roles[updateRole])
+                                if (updateStatus) {
                                     $('#status-' + updateId).addClass('active')
                                 } else {
                                     $('#status-' + updateId).removeClass('active')
                                 }
 
-                            } else if (response.status === false && response.error.code === 100) {
+                            } else if (!response.status && response.error.code === 100) {
                                 $('.modal-msg').html('PLEASE FILL ALL FIELDS')
                             }
                         },
-                        error: function(xhr, status, error) {
+                        error: function (xhr, status, error) {
                             console.log(error);
                         }
                     });
@@ -320,27 +324,28 @@ include_once 'connect.php';
                             updateId: updateId
                         },
                         dataType: 'json',
+
                         success: function (userid) {
+
                             $('#first_name').val(userid.user.first_name);
                             $('#last_name').val(userid.user.last_name);
                             $('#role').val(userid.user.role);
-                            $('#status').prop('checked', userid.user.status === 'on').change();
+                            $('#status').prop('checked', userid.user.status).change();
                         },
-                        error: function(xhr, status, error) {
+                        error: function (xhr, status, error) {
                             console.log(error);
                         }
                     });
 
                 }
-
-                function showDeleteConfirmation(deleteId, firstName,lastName) {
-                    $('.modal-body-delete').html('Are you sure you want to delete'+ ' ' + firstName + ' ' + lastName)
+                function showDeleteConfirmation(deleteId, firstName, lastName) {
+                    $('.modal-body-delete').html('Are you sure you want to delete' + ' ' + firstName + ' ' + lastName)
                     $('#delete-modal').modal('show');
                     $('#confirm-delete').data('delete-id', deleteId);
+                    $('#confirm-delete').addClass('delete-user');
                 }
 
-
-                $(document).on('click', '#confirm-delete', function () {
+                $(document).on('click', '.delete-user', function () {
                     let deleteId = $(this).data('delete-id');
                     deleteConfirmed(deleteId);
                     $('#delete-modal').modal('hide');
@@ -357,6 +362,7 @@ include_once 'connect.php';
                             $("#tr-" + deleteId).remove();
                         }
                     });
+                    $('#confirm-delete').removeClass('delete-user');
                 }
 
 
@@ -374,9 +380,6 @@ include_once 'connect.php';
                     $("#user-modal").modal("show");
                 }
 
-                function alertForm(title, msg) {
-
-                }
 
                 function hideWarn() {
                     $('.modal-msg').html('')
@@ -415,12 +418,10 @@ include_once 'connect.php';
                         $('.modal-body-alert').html('Please choose the option')
                         $('#alert-modal').modal('show')
 
-                    }
-                    else if (numChecked.length === 0 && sel1 === ''){
+                    } else if (numChecked.length === 0 && sel1 === '') {
                         $('.modal-body-alert').html('Please pick at least one User and choose an option');
                         $('#alert-modal').modal('show');
-                    }
-                    else if (sel1 === 'set-active') {
+                    } else if (sel1 === 'set-active') {
                         $.ajax({
                             url: "forms/setUser.php",
                             type: "post",
@@ -455,8 +456,8 @@ include_once 'connect.php';
                     } else if (sel1 === 'set-delete') {
                         $('#delete-modal').modal('show')
                         $('.modal-body-delete').html('Are you sure you want to delete this users?')
-                        $('#confirm-delete').attr('id', 'user-set-delete');
-                        $(document).off('click', '#user-set-delete').on('click', '#user-set-delete', function () {
+                        $('#confirm-delete').addClass('user-set-delete');
+                        $(document).off('click', '.user-set-delete').on('click', '.user-set-delete', function () {
                             $.ajax({
                                 url: "forms/setUser.php",
                                 type: "post",
@@ -471,6 +472,7 @@ include_once 'connect.php';
                                     $("#all-items").prop("checked", false);
                                 }
                             })
+                            $('#confirm-delete').removeClass('user-set-delete')
                             $('#delete-modal').modal('hide');
                         });
                     }
@@ -522,12 +524,11 @@ include_once 'connect.php';
                                 $("#all-items").prop("checked", false);
                             }
                         })
-
                     } else if (sel2 === 'set-delete') {
                         $('#delete-modal').modal('show')
                         $('.modal-body-delete').html('Are you sure you want to delete this users?')
-                        $('#confirm-delete').attr('id', 'user-set-delete');
-                        $(document).off('click', '#user-set-delete').on('click', '#user-set-delete', function () {
+                        $('#confirm-delete').addClass('user-set-delete');
+                        $(document).off('click', '.user-set-delete').on('click', '.user-set-delete', function () {
                             $.ajax({
                                 url: "forms/setUser.php",
                                 type: "post",
@@ -542,6 +543,7 @@ include_once 'connect.php';
                                     $("#all-items").prop("checked", false);
                                 }
                             })
+                            $('#confirm-delete').removeClass('user-set-delete')
                             $('#delete-modal').modal('hide');
                         });
                     }

@@ -14,8 +14,9 @@ if (isset($_POST['updateId'])) {
         $response = [
             'user' => $row
         ];
-
     }
+    $response['user']['status'] = (int)$response['user']['status'];
+    $response['user']['role'] = (int)$response['user']['role'];
     if ($result) {
         $response['status'] = true;
         $response['error'] = NULL;
@@ -24,7 +25,7 @@ if (isset($_POST['updateId'])) {
         $response['status'] = false;
         $response['error'] = [
             'code' => 100,
-            'message' => 'not found user'
+            'message' => 'User not found'
         ];
 
 
