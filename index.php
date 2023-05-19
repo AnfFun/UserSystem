@@ -1,9 +1,9 @@
 <?php
 include_once 'connect.php';
 $roles = [
-        1 => 'Admin',
-        2 => 'User'
-]
+    1 => 'Admin',
+    2 => 'User'
+];
 ?>
 
 <!DOCTYPE html>
@@ -88,7 +88,7 @@ $roles = [
                                                 <div class="btn-group align-top">
                                                     <button class="btn btn-sm btn-outline-secondary badge" id="up-btn-<?= $id ?>" type="button"
                                                             data-toggle="modal"
-                                                            onclick="ed(<?= $id ?>)">Edit
+                                                            onclick="editUser(<?= $id ?>)">Edit
                                                     </button>
 
                                                     <button class="btn btn-sm btn-outline-secondary badge"
@@ -217,11 +217,6 @@ $roles = [
                     2: "User",
                 }
 
-                function ed(updateId) {
-                    userForm('Update User', 'Update');
-                    editUser(updateId);
-                    $('#sus-btn').attr('onclick', 'updateUser(' + updateId + ')');
-                }
 
                 function displayAdd() {
                     userForm('Add User', 'Add')
@@ -263,7 +258,8 @@ $roles = [
                             <td class="text-center align-middle"><i id="status-${response.user.id}" class="fa fa-circle circle ${response.user.status  ? 'active' : ''}"></i></td>
                             <td class="text-center align-middle">
                                 <div class="btn-group align-top">
-                                    <button class="btn btn-sm btn-outline-secondary badge" id="up-btn-${response.user.id}" type="button" data-toggle="modal" onclick="ed(${response.user.id})">Edit</button>
+                                    <button class="btn btn-sm btn-outline-secondary badge" id="up-btn-${response.user.id}" type="button" data-toggle="modal"
+                                    onclick="editUser(${response.user.id})">Edit</button>
                                     <button class="btn btn-sm btn-outline-secondary badge" onclick="showDeleteConfirmation(${response.user.id}, '${response
                                     .user.first_name}','${response.user.last_name}')"
                                     type="button"><i class="fa fa-trash"></i></button>
@@ -293,13 +289,13 @@ $roles = [
                     let hiddenData = $('#hiddenData').val()
                     $.ajax({
                         url: 'forms/update.php', type: "post", data: {
-                            updateFName: updateFName, updateLName: updateLName, updateStatus: updateStatus, updateRole: updateRole, hiddenData: hiddenData,
+                            updateFName: updateFName, updateLName: updateLName, updateStatus: updateStatus, updateRole: updateRole, hiddenData: hiddenData,updateId
 
                         }, success: function (response) {
                             if (response.status) {
                                 $('#user-modal').modal('hide')
                                 $('#name-' + updateId).html(updateFName + ' ' + updateLName)
-                               $('#role-' + updateId).html(roles[updateRole])
+                                $('#role-' + updateId).html(roles[updateRole])
                                 if (updateStatus) {
                                     $('#status-' + updateId).addClass('active')
                                 } else {
@@ -316,8 +312,8 @@ $roles = [
                     });
 
                 }
-
                 function editUser(updateId) {
+
                     $('#hiddenData').val(updateId)
                     $.ajax({
                         url: 'forms/edit.php', type: "post", data: {
@@ -326,17 +322,27 @@ $roles = [
                         dataType: 'json',
 
                         success: function (userid) {
+                            switch (userid.status){
+                                case true:{
+                                    userForm('Update User', 'Update');
+                                    $('#first_name').val(userid.user.first_name);
+                                    $('#last_name').val(userid.user.last_name);
+                                    $('#role').val(userid.user.role);
+                                    $('#status').prop('checked', userid.user.status).change();
+                                    break
+                                }
+                                case false:{
+                                    $('.modal-body-alert').html('User not found')
+                                    $('#alert-modal').modal('show')
+                                    $("#tr-" + updateId).remove();
+                                }
+                            }
 
-                            $('#first_name').val(userid.user.first_name);
-                            $('#last_name').val(userid.user.last_name);
-                            $('#role').val(userid.user.role);
-                            $('#status').prop('checked', userid.user.status).change();
                         },
                         error: function (xhr, status, error) {
-                            console.log(error);
                         }
                     });
-
+                    $('#sus-btn').attr('onclick', 'updateUser(' + updateId + ')');
                 }
                 function showDeleteConfirmation(deleteId, firstName, lastName) {
                     $('.modal-body-delete').html('Are you sure you want to delete' + ' ' + firstName + ' ' + lastName)
@@ -348,7 +354,6 @@ $roles = [
                 $(document).on('click', '.delete-user', function () {
                     let deleteId = $(this).data('delete-id');
                     deleteConfirmed(deleteId);
-                    $('#delete-modal').modal('hide');
                 });
 
                 function deleteConfirmed(deleteId) {
@@ -358,11 +363,26 @@ $roles = [
                         data: {
                             deleteSend: deleteId
                         },
-                        success: function (data, status) {
-                            $("#tr-" + deleteId).remove();
+                        success: function (response) {
+                            switch (response.status){
+                                case true: {
+                                    $("#tr-" + deleteId).remove();
+                                    $('#confirm-delete').removeClass('delete-user');
+                                    $('#delete-modal').modal('hide');
+                                    break
+                                }
+                                case false: {
+                                    $('#confirm-delete').removeClass('delete-user');
+                                    $('#delete-modal').modal('hide');
+                                    $('.modal-body-alert').html('User is already deleted ')
+                                    $('#alert-modal').modal('show')
+                                    $("#tr-" + deleteId).remove();
+                                    break
+                                }
+                            }
                         }
                     });
-                    $('#confirm-delete').removeClass('delete-user');
+
                 }
 
 
@@ -428,12 +448,28 @@ $roles = [
                             data: {
                                 setActive: selectedRows
                             },
-                            success: function (data, status) {
-                                selectedRows.forEach(function (select) {
-                                    $('#status-' + select).addClass('active')
-                                })
-                                $('.check').prop("checked", false);
-                                $("#all-items").prop("checked", false);
+                            success: function (response) {
+                                switch (response.status){
+                                    case true:{
+                                        selectedRows.forEach(function (select) {
+                                            $('#status-' + select).addClass('active')
+                                        })
+                                        $('.check').prop("checked", false);
+                                        $("#all-items").prop("checked", false);
+                                        break
+                                    }
+                                    case false:{
+                                        let selected = response.error.errorId
+                                        let selecterr = selected.toString()
+                                        $('.modal-body-alert').html('Users with id: ' + selecterr + ' not found')
+                                        $('#alert-modal').modal('show')
+                                        selected.forEach(function (select) {
+                                            $("#tr-" + select).remove();
+                                        })
+                                        break
+                                    }
+                                }
+
                             }
                         })
 
@@ -444,12 +480,28 @@ $roles = [
                             data: {
                                 setNotActive: selectedRows
                             },
-                            success: function (data, status) {
-                                selectedRows.forEach(function (select) {
-                                    $('#status-' + select).removeClass('active')
-                                })
-                                $('.check').prop("checked", false);
-                                $("#all-items").prop("checked", false);
+                            success: function (response) {
+                                switch (response.status){
+                                    case true:{
+                                        selectedRows.forEach(function (select) {
+                                            $('#status-' + select).removeClass('active')
+                                        })
+                                        $('.check').prop("checked", false);
+                                        $("#all-items").prop("checked", false);
+                                        break
+                                    }
+                                    case false:{
+                                        let selected = response.error.errorId
+                                        let selecterr = selected.toString()
+                                        $('.modal-body-alert').html('Users with id: ' + selecterr + ' not found')
+                                        $('#alert-modal').modal('show')
+                                        selected.forEach(function (select) {
+                                            $("#tr-" + select).remove();
+                                        })
+                                        break
+                                    }
+                                }
+
                             }
                         })
 
@@ -464,12 +516,28 @@ $roles = [
                                 data: {
                                     setDelete: selectedRows
                                 },
-                                success: function (data, status) {
-                                    selectedRows.forEach(function (select) {
-                                        $("#tr-" + select).remove();
-                                    })
-                                    $('.check').prop("checked", false);
-                                    $("#all-items").prop("checked", false);
+                                success: function (response) {
+                                    switch (response.status){
+                                        case true:{
+                                            selectedRows.forEach(function (select) {
+                                                $("#tr-" + select).remove();
+                                            })
+                                            $('.check').prop("checked", false);
+                                            $("#all-items").prop("checked", false);
+                                            break
+                                        }
+                                        case false:{
+                                            let selected = response.error.errorId
+                                            let selecterr = selected.toString()
+                                            $('.modal-body-alert').html('Users with id: ' + selecterr + ' not found')
+                                            $('#alert-modal').modal('show')
+                                            selected.forEach(function (select) {
+                                                $("#tr-" + select).remove();
+                                            })
+                                            break
+                                        }
+                                    }
+
                                 }
                             })
                             $('#confirm-delete').removeClass('user-set-delete')
@@ -500,12 +568,27 @@ $roles = [
                             data: {
                                 setActive: selectedRows
                             },
-                            success: function (data, status) {
-                                selectedRows.forEach(function (select) {
-                                    $('#status-' + select).addClass('active')
-                                })
-                                $('.check').prop("checked", false);
-                                $("#all-items").prop("checked", false);
+                            success: function (response) {
+                                switch (response.status){
+                                    case true:{
+                                        selectedRows.forEach(function (select) {
+                                            $('#status-' + select).addClass('active')
+                                        })
+                                        $('.check').prop("checked", false);
+                                        $("#all-items").prop("checked", false);
+                                        break
+                                    }
+                                    case false:{
+                                        let selected = response.error.errorId
+                                        let selecterr = selected.toString()
+                                        $('.modal-body-alert').html('Some Users with id:' + selecterr + ' not found')
+                                        $('#alert-modal').modal('show')
+                                        selected.forEach(function (select) {
+                                            $("#tr-" + select).remove();
+                                        })
+                                        break
+                                    }
+                                }
                             }
                         })
 
@@ -516,12 +599,27 @@ $roles = [
                             data: {
                                 setNotActive: selectedRows
                             },
-                            success: function (data, status) {
-                                selectedRows.forEach(function (select) {
-                                    $('#status-' + select).removeClass('active')
-                                })
-                                $('.check').prop("checked", false);
-                                $("#all-items").prop("checked", false);
+                            success: function (response) {
+                                switch (response.status){
+                                    case true:{
+                                        selectedRows.forEach(function (select) {
+                                            $('#status-' + select).removeClass('active')
+                                        })
+                                        $('.check').prop("checked", false);
+                                        $("#all-items").prop("checked", false);
+                                        break
+                                    }
+                                    case false:{
+                                        let selected = response.error.errorId
+                                        let selecterr = selected.toString()
+                                        $('.modal-body-alert').html('Users with id: ' +selecterr + ' not found')
+                                        $('#alert-modal').modal('show')
+                                        selected.forEach(function (select) {
+                                            $("#tr-" + select).remove();
+                                        })
+                                        break
+                                    }
+                                }
                             }
                         })
                     } else if (sel2 === 'set-delete') {
@@ -535,12 +633,27 @@ $roles = [
                                 data: {
                                     setDelete: selectedRows
                                 },
-                                success: function (data, status) {
-                                    selectedRows.forEach(function (select) {
-                                        $("#tr-" + select).remove();
-                                    })
-                                    $('.check').prop("checked", false);
-                                    $("#all-items").prop("checked", false);
+                                success: function (response) {
+                                    switch (response.status){
+                                        case true:{
+                                            selectedRows.forEach(function (select) {
+                                                $("#tr-" + select).remove();
+                                            })
+                                            $('.check').prop("checked", false);
+                                            $("#all-items").prop("checked", false);
+                                            break
+                                        }
+                                        case false:{
+                                            let selected = response.error.errorId
+                                            let selecterr = selected.toString()
+                                            $('.modal-body-alert').html('Users with id: ' + selecterr + ' not found')
+                                            $('#alert-modal').modal('show')
+                                            selected.forEach(function (select) {
+                                                $("#tr-" + select).remove();
+                                            })
+                                            break
+                                        }
+                                    }
                                 }
                             })
                             $('#confirm-delete').removeClass('user-set-delete')
