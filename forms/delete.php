@@ -30,7 +30,8 @@ if (isset($_POST['deleteSend'])) {
         $response['status'] = false;
         $response['error'] = [
             'code' => 100,
-            'message' => 'User already deleted'
+            'error_id' => $user_id,
+            'message' => "User with id: $user_id already deleted"
         ];
     }
     header('Content-Type: application/json');

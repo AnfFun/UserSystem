@@ -529,7 +529,7 @@ $roles = [
                                         case false:{
                                             let selected = response.error.errorId
                                             let selecterr = selected.toString()
-                                            $('.modal-body-alert').html('Users with id: ' + selecterr + ' not found')
+                                            $('.modal-body-alert').html('Users with id: ' + selecterr + ' already deleted')
                                             $('#alert-modal').modal('show')
                                             selected.forEach(function (select) {
                                                 $("#tr-" + select).remove();
@@ -646,7 +646,7 @@ $roles = [
                                         case false:{
                                             let selected = response.error.errorId
                                             let selecterr = selected.toString()
-                                            $('.modal-body-alert').html('Users with id: ' + selecterr + ' not found')
+                                            $('.modal-body-alert').html('Users with id: ' + selecterr + ' already deleted')
                                             $('#alert-modal').modal('show')
                                             selected.forEach(function (select) {
                                                 $("#tr-" + select).remove();

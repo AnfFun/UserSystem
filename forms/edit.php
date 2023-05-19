@@ -34,7 +34,8 @@ if (isset($_POST['updateId'])) {
         $response['status'] = false;
         $response['error'] = [
             'code' => 100,
-            'message' => 'User not found'
+            'errorId' => $user_id,
+            'message' => "User with id: $user_id not found"
         ];
 
 
