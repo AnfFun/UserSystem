@@ -309,7 +309,6 @@ $roles = [
                                         let user = $('#name-' + updateId).html();
                                         $('.modal-body-alert').html(user + ' not found');
                                         $('#alert-modal').modal('show');
-                                        $("#tr-" + updateId).remove();
                                         break;
                                     }
                                 }
@@ -356,7 +355,6 @@ $roles = [
                                     let user = $('#name-' + updateId).html()
                                     $('.modal-body-alert').html(user + ' not found')
                                     $('#alert-modal').modal('show')
-                                    $("#tr-" + updateId).remove();
                                 }
                             }
 
@@ -485,12 +483,8 @@ $roles = [
                                     }
                                     case false: {
                                         let selected = response.error.errorId
-                                        let selecterr = selected.toString()
-                                        $('.modal-body-alert').html('Users with id: ' + selecterr + ' not found')
+                                        $('.modal-body-alert').html('There are selected Users that doesn\'t exist anymore')
                                         $('#alert-modal').modal('show')
-                                        selected.forEach(function (select) {
-                                            $("#tr-" + select).remove();
-                                        })
                                         $('.check').prop("checked", false);
                                         $("#all-items").prop("checked", false);
                                         break
@@ -519,12 +513,8 @@ $roles = [
                                     }
                                     case false: {
                                         let selected = response.error.errorId
-                                        let selecterr = selected.toString()
-                                        $('.modal-body-alert').html('Users with id: ' + selecterr + ' not found')
+                                        $('.modal-body-alert').html('There are selected Users that doesn\'t exist anymore')
                                         $('#alert-modal').modal('show')
-                                        selected.forEach(function (select) {
-                                            $("#tr-" + select).remove();
-                                        })
                                         $('.check').prop("checked", false);
                                         $("#all-items").prop("checked", false);
                                         break
@@ -557,8 +547,7 @@ $roles = [
                                         }
                                         case false: {
                                             let selected = response.error.errorId
-                                            let selecterr = selected.toString()
-                                            $('.modal-body-alert').html('Users with id: ' + selecterr + ' already deleted')
+                                            $('.modal-body-alert').html('There are selected Users that already deleted')
                                             $('#alert-modal').modal('show')
                                             selected.forEach(function (select) {
                                                 $("#tr-" + select).remove();
@@ -613,8 +602,7 @@ $roles = [
                                     }
                                     case false: {
                                         let selected = response.error.errorId
-                                        let selecterr = selected.toString()
-                                        $('.modal-body-alert').html('Users with id:' + selecterr + ' not found')
+                                        $('.modal-body-alert').html('There are selected Users that doesn\'t exist anymore')
                                         $('#alert-modal').modal('show')
                                         selected.forEach(function (select) {
                                             $("#tr-" + select).remove();
@@ -647,8 +635,7 @@ $roles = [
                                     }
                                     case false: {
                                         let selected = response.error.errorId
-                                        let selecterr = selected.toString()
-                                        $('.modal-body-alert').html('Users with id: ' + selecterr + ' not found')
+                                        $('.modal-body-alert').html('There are selected Users that doesn\'t exist anymore')
                                         $('#alert-modal').modal('show')
                                         selected.forEach(function (select) {
                                             $("#tr-" + select).remove();
@@ -683,8 +670,7 @@ $roles = [
                                         }
                                         case false: {
                                             let selected = response.error.errorId
-                                            let selecterr = selected.toString()
-                                            $('.modal-body-alert').html('Users with id: ' + selecterr + ' already deleted')
+                                            $('.modal-body-alert').html('There are selected Users that already deleted')
                                             $('#alert-modal').modal('show')
                                             selected.forEach(function (select) {
                                                 $("#tr-" + select).remove();
