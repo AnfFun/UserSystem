@@ -5,25 +5,28 @@ $response = [];
 
 function checkUserExists($con, $user_id)
 {
-    $sql = "SELECT * FROM `user` WHERE `id` = $user_id";
-    $result = mysqli_query($con, $sql);
-    return mysqli_num_rows($result) > 0;
+    $sql = "SELECT * FROM `user` WHERE `id` = :user_id";
+    $stmt = $con->prepare($sql);
+    $stmt->bindParam(':user_id', $user_id,PDO::PARAM_INT);
+    $stmt->execute();
+    return $stmt->rowCount() > 0;
 }
 
 function updateUserStatus($con, $ids, $status)
 {
     $ids = implode(',', $ids);
-    $sql = "UPDATE `user` SET status = '$status' WHERE id IN ($ids)";
-    $result = mysqli_query($con, $sql);
-    return $result;
+    $sql = "UPDATE `user` SET status = :status WHERE id IN ($ids)";
+    $stmt = $con->prepare($sql);
+    $stmt->bindParam(':status', $status);
+    return $stmt->execute();
 }
 
 function deleteUser($con, $ids)
 {
     $ids = implode(',', $ids);
     $sql = "DELETE FROM `user` WHERE id IN ($ids)";
-    $result = mysqli_query($con, $sql);
-    return $result;
+    $stmt = $con->prepare($sql);
+    return $stmt->execute();
 }
 
 if (isset($_POST['setNotActive'])) {

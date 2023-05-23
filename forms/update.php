@@ -6,19 +6,26 @@ $response = [];
 function updateUser($con, $user_id, $f_name, $l_name, $role, $status)
 {
     $sql = "UPDATE `user` SET 
-            first_name = '$f_name',
-            last_name = '$l_name',
-            role = '$role',
-            status = '$status'
-            WHERE id = '$user_id'";
-    $result = mysqli_query($con, $sql);
-    return $result;
+            first_name = :f_name,
+            last_name = :l_name,
+            role = :role,
+            status = :status
+            WHERE id = :user_id";
+    $stmt = $con->prepare($sql);
+    $stmt->bindParam(':f_name', $f_name,PDO::PARAM_STR);
+    $stmt->bindParam(':l_name', $l_name,PDO::PARAM_STR);
+    $stmt->bindParam(':role', $role,PDO::PARAM_INT);
+    $stmt->bindParam(':status', $status,PDO::PARAM_INT);
+    $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+    return $stmt->execute();
 }
 
 $user_id = $_POST['hiddenData'];
-$sql = "SELECT * FROM `user` WHERE `id` = $user_id";
-$result = mysqli_query($con, $sql);
-$userExists = mysqli_num_rows($result) > 0;
+$sql = "SELECT * FROM `user` WHERE `id` = :user_id";
+$stmt = $con->prepare($sql);
+$stmt->bindParam(':user_id', $user_id);
+$stmt->execute();
+$userExists = $stmt->rowCount() > 0;
 
 if (isset($_POST['hiddenData'])) {
     if ($userExists) {

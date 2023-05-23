@@ -7,9 +7,14 @@ $response = [];
 
 if (!empty($first_name) && !empty($last_name) && !empty($role) && ($status == 0 || $status == 1)) {
     $sql = "INSERT INTO `user` (first_name, last_name, role, status)
-            VALUES ('$first_name', '$last_name', '$role', '$status')";
-    $result = mysqli_query($con, $sql);
-    $id = mysqli_insert_id($con);
+            VALUES (:first_name, :last_name, :role, :status)";
+    $stmt = $con->prepare($sql);
+    $stmt->bindParam(':first_name', $first_name, PDO::PARAM_STR);
+    $stmt->bindParam(':last_name', $last_name, PDO::PARAM_STR);
+    $stmt->bindParam(':role', $role, PDO::PARAM_INT);
+    $stmt->bindParam(':status', $status, PDO::PARAM_INT);
+    $result = $stmt->execute();
+    $id = $con->lastInsertId();
 
     if ($result) {
         $response['status'] = true;

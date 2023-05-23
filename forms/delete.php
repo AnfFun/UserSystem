@@ -4,13 +4,17 @@ include_once '../connect.php';
 if (isset($_POST['deleteSend'])) {
     $user_id = $_POST['deleteSend'];
 
-    $sql = "SELECT * FROM `user` WHERE `id` = $user_id";
-    $result = mysqli_query($con, $sql);
-    $userExists = mysqli_num_rows($result) > 0;
+    $sql = "SELECT * FROM `user` WHERE `id` = :user_id";
+    $stmt = $con->prepare($sql);
+    $stmt->bindParam(':user_id', $user_id,PDO::PARAM_INT);
+    $stmt->execute();
+    $userExists = $stmt->rowCount() > 0;
 
     if ($userExists) {
-        $sql = "DELETE FROM `user` WHERE id = '$user_id'";
-        $result = mysqli_query($con, $sql);
+        $sql = "DELETE FROM `user` WHERE id = :user_id";
+        $stmt = $con->prepare($sql);
+        $stmt->bindParam(':user_id', $user_id,PDO::PARAM_INT);
+        $result = $stmt->execute();
 
         if ($result) {
             $response = [
@@ -41,3 +45,4 @@ if (isset($_POST['deleteSend'])) {
     header('Content-Type: application/json');
     echo json_encode($response);
 }
+?>
