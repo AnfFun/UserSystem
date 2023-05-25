@@ -44,6 +44,7 @@ if (isset($_POST['hiddenData'])) {
                     'first_name' => $f_name,
                     'last_name' => $l_name,
                     'role' => (int)$role,
+                    'role_name' => $roles[(int)$role],
                     'status' => (int)$status
                 ];
             } else {

@@ -24,6 +24,7 @@ if (!empty($first_name) && !empty($last_name) && !empty($role) && ($status == 0 
             'first_name' => $first_name,
             'last_name' => $last_name,
             'role' => (int)$role,
+            'role_name' => $roles[(int)$role],
             'status' => (int)$status
         ];
     } else {
