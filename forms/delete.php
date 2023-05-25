@@ -1,33 +1,46 @@
 <?php
 include_once '../connect.php';
 
-if (isset($_POST['deleteSend'])) {
-    $user_id = $_POST['deleteSend'];
+$response = [];
 
-    $sql = "SELECT * FROM `user` WHERE `id` = :user_id";
-    $stmt = $con->prepare($sql);
-    $stmt->bindParam(':user_id', $user_id,PDO::PARAM_INT);
-    $stmt->execute();
-    $userExists = $stmt->rowCount() > 0;
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['deleteSend'])) {
+        $user_id = $_POST['deleteSend'];
 
-    if ($userExists) {
-        $sql = "DELETE FROM `user` WHERE id = :user_id";
+        $sql = "SELECT * FROM `user` WHERE `id` = :user_id";
         $stmt = $con->prepare($sql);
-        $stmt->bindParam(':user_id', $user_id,PDO::PARAM_INT);
-        $result = $stmt->execute();
+        $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+        $stmt->execute();
+        $userExists = $stmt->rowCount() > 0;
 
-        if ($result) {
-            $response = [
-                'status' => true,
-                'error' => null,
-                'id' => $user_id
-            ];
+        if ($userExists) {
+            $sql = "DELETE FROM `user` WHERE id = :user_id";
+            $stmt = $con->prepare($sql);
+            $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+            $result = $stmt->execute();
+
+            if ($result) {
+                $response = [
+                    'status' => true,
+                    'error' => null,
+                    'id' => $user_id
+                ];
+            } else {
+                $response = [
+                    'status' => false,
+                    'error' => [
+                        'code' => 500,
+                        'message' => 'User not deleted, Internal server error'
+                    ]
+                ];
+            }
         } else {
             $response = [
                 'status' => false,
                 'error' => [
-                    'code' => 500,
-                    'message' => 'User not deleted, Internal server error'
+                    'code' => 100,
+                    'error_id' => $user_id,
+                    'message' => "User with id: $user_id already deleted"
                 ]
             ];
         }
@@ -35,14 +48,21 @@ if (isset($_POST['deleteSend'])) {
         $response = [
             'status' => false,
             'error' => [
-                'code' => 100,
-                'error_id' => $user_id,
-                'message' => "User with id: $user_id already deleted"
+                'code' => 400,
+                'message' => 'Invalid request'
             ]
         ];
     }
-
-    header('Content-Type: application/json');
-    echo json_encode($response);
+} else {
+    $response = [
+        'status' => false,
+        'error' => [
+            'code' => 400,
+            'message' => 'Invalid request method'
+        ]
+    ];
 }
+
+header('Content-Type: application/json');
+echo json_encode($response);
 ?>

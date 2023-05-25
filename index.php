@@ -16,7 +16,6 @@ include_once 'connect.php';
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-
 <div class="container">
     <div class="row flex-lg-nowrap">
         <div class="col">
@@ -27,7 +26,8 @@ include_once 'connect.php';
                             <div class="card-title">
                                 <h6 class="mr-2"><span>Users</span></h6>
                             </div>
-                            <div class="d-flex head ">
+
+                            <div class="d-flex action-header ">
                                 <div class="select-box d-flex"></div>
                             </div>
 
@@ -50,6 +50,7 @@ include_once 'connect.php';
                                         </tr>
                                         </thead>
                                         <tbody>
+
                                         <?php
                                         $sql = "SELECT * FROM `user`";
                                         $stmt = $con->prepare($sql);
@@ -57,34 +58,27 @@ include_once 'connect.php';
                                         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                                         foreach ($rows as $row) {
-                                            $id = $row['id'];
-                                            $first_name = $row['first_name'];
-                                            $last_name = $row['last_name'];
-                                            $status = $row['status'];
-                                            $role = $row['role'];
                                             ?>
 
-                                            <tr id="tr-<?= $id ?>">
+                                            <tr id="tr-<?= $row['id']; ?>">
                                                 <td class="align-middle">
                                                     <div class="custom-control custom-control-inline custom-checkbox custom-control-nameless m-0 align-top">
-                                                        <input type="checkbox" class="custom-control-input select-checkbox check" value="<?= $id ?>"
-                                                               id="item-<?= $id ?>">
-                                                        <label class="custom-control-label" for="item-<?= $id ?>"></label>
+                                                        <input type="checkbox" class="custom-control-input select-checkbox check" value="<?= $row['id']; ?>" id="item-<?= $row['id']; ?>">
+                                                        <label class="custom-control-label" for="item-<?= $row['id']; ?>"></label>
                                                     </div>
                                                 </td>
-                                                <td class="text-nowrap align-middle"><?= $first_name . ' ' . $last_name ?></td>
-                                                <td class="text-nowrap align-middle "><span><?= $roles[$role] ?><span></td>
-                                                <td class="text-center align-middle"><i id="status-<?= $id ?>"
-                                                                                        class="fa fa-circle circle <?= $status ? 'active' : '' ?>"></i></td>
+                                                <td class="text-nowrap align-middle"><?= $row['first_name'] . ' ' . $row['last_name'] ?></td>
+                                                <td class="text-nowrap align-middle "><span><?= $roles[$row['role']] ?><span></td>
+                                                <td class="text-center align-middle"><i id="status-<?= $row['id'] ?>" class="fa fa-circle circle <?= $row['status'] ? 'active' : '' ?>"></i></td>
                                                 <td class="text-center align-middle">
                                                     <div class="btn-group align-top">
-                                                        <button class="btn btn-sm btn-outline-secondary badge" id="up-btn-<?= $id ?>" type="button"
+                                                        <button class="btn btn-sm btn-outline-secondary badge" id="up-btn-<?= $row['id'] ?>" type="button"
                                                                 data-toggle="modal">Edit
                                                         </button>
 
-                                                        <button class="btn btn-sm btn-outline-secondary badge btn-delete" data-delete-id="<?= $id ?>"
-                                                                data-first-name="<?= $first_name ?>" data-last-name="<?= $last_name ?>" type="button"><i class="fa
-                                                    fa-trash"></i></button>
+                                                        <button class="btn btn-sm btn-outline-secondary badge btn-delete" data-delete-id="<?= $row['id'] ?>"
+                                                                data-first-name="<?= $row['first_name'] ?>" data-last-name="<?=  $row['last_name'] ?>" type="button"><i
+                                                                    class="fa fa-trash"></i></button>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -92,9 +86,9 @@ include_once 'connect.php';
                                         </tbody>
                                     </table>
                                 </div>
-                                <div class="d-flex footer ">
-                                    <div class="select-box d-flex"></div>
-                                </div>
+                            </div>
+                            <div class="d-flex action-footer ">
+                                <div class="select-box d-flex"></div>
                             </div>
                         </div>
 
@@ -111,6 +105,7 @@ include_once 'connect.php';
                                         </button>
                                     </div>
                                     <div class="modal-body">
+                                        <input type="hidden" id="hiddenData">
                                         <form id="modal-form">
                                             <div class="form-group">
                                                 <label for="first_name">First name</label>
@@ -130,7 +125,7 @@ include_once 'connect.php';
                                             <div class="form-group">
                                                 <label for="role" class="role-lable">Role</label>
                                                 <select class="form-control" name="role" id="role">
-                                                    <option value="">-Please Select-</option>
+                                                    <option value='' selected >-Please Select-</option>
                                                     <?php
                                                     foreach ($roles as $key => $role) {
                                                         echo "<option value = $key >$role</option>";
@@ -144,7 +139,6 @@ include_once 'connect.php';
                                         </form>
                                     </div>
                                     <div class="modal-footer">
-                                        <input type="hidden" id="hiddenData">
                                         <button type="button" class="btn btn-secondary close-modal" data-dismiss="modal">Close</button>
                                         <button type="button" class="btn btn-primary" id="sus-btn"></button>
                                     </div>
@@ -202,7 +196,7 @@ include_once 'connect.php';
                     }).appendTo('.select-box')
 
                     let arr = [
-                        {val: '', text: '-Please-Select-'},
+                        {val: 0, text: '-Please-Select-'},
                         {val: 'set-active', text: 'Set Active'},
                         {val: 'set-not-active', text: 'Set Not Active'},
                         {val: 'set-delete', text: 'Delete'}
@@ -257,7 +251,7 @@ include_once 'connect.php';
                             </td>
                             <td class="text-nowrap align-middle"><span>${response.user.first_name} ${response.user.last_name}</span></td>
                             <td class="text-nowrap align-middle"><span>${response.user.role_name}</span></td>
-                            <td class="text-center align-middle"><i id="status-${response.user.id}" class="fa fa-circle circle ${response.user.status ? 'active' : ''}"></i></td>
+                            <td class="text-center align-middle "><i id="status-${response.user.id}" class="fa fa-circle circle ${response.user.status ? 'active' : ''}"></i></td>
                             <td class="text-center align-middle">
                                 <div class="btn-group align-top">
                                     <button class="btn btn-sm btn-outline-secondary badge" id="up-btn-${response.user.id}" type="button" data-toggle="modal">Edit</button>
@@ -306,9 +300,7 @@ include_once 'connect.php';
                                         }
                                         case 100: {
                                             $('#user-modal').modal('hide');
-                                            let parent = $('#tr-' + updateId)
-                                            let sub = parent.children().eq(1)
-                                            let user = sub.html()
+                                            let user = $('#tr-' + updateId).children().eq(1).html()
                                             $('.modal-body-alert').html(user + ' not found');
                                             $('#alert-modal').modal('show');
                                             break;
@@ -360,9 +352,7 @@ include_once 'connect.php';
                                         break;
                                     }
                                     case false: {
-                                        let parent = $('#tr-' + updateId)
-                                        let sub = parent.children().eq(1)
-                                        let user = sub.html()
+                                        let user = $('#tr-' + updateId).children().eq(1).html()
                                         $('.modal-body-alert').html(user + ' not found');
                                         $('#alert-modal').modal('show');
                                         break;
@@ -416,9 +406,7 @@ include_once 'connect.php';
                                         break;
                                     }
                                     case false: {
-                                        let parent = $('#tr-' + deleteId)
-                                        let sub = parent.children().eq(1)
-                                        let user = sub.html()
+                                        let user = $('#tr-' + deleteId).children().eq(1).html()
                                         $('#confirm-delete').removeClass('delete-user');
                                         $('#delete-modal').modal('hide');
                                         $('.modal-body-alert').html(user + ' is already deleted');
@@ -471,15 +459,15 @@ include_once 'connect.php';
                     });
 
                     function selectCheck(numChecked, sel, selectedRows) {
-                        if (numChecked.length === 0 && sel !== '') {
+                        if (numChecked.length === 0 && sel !== '0') {
                             $('.modal-body-alert').html('Please pick at least one User')
                             $('#alert-modal').modal('show')
 
-                        } else if (numChecked.length !== 0 && sel === '') {
+                        } else if (numChecked.length !== 0 && sel === '0') {
                             $('.modal-body-alert').html('Please choose the option')
                             $('#alert-modal').modal('show')
 
-                        } else if (numChecked.length === 0 && sel === '') {
+                        } else if (numChecked.length === 0 && sel === '0') {
                             $('.modal-body-alert').html('Please pick at least one User and choose an option');
                             $('#alert-modal').modal('show');
                         } else if (sel === 'set-active') {
@@ -501,7 +489,6 @@ include_once 'connect.php';
                                             break
                                         }
                                         case false: {
-                                            let selected = response.error.errorId
                                             $('.modal-body-alert').html('There are selected Users that doesn\'t exist anymore')
                                             $('#alert-modal').modal('show')
                                             $('.check').prop("checked", false);
@@ -532,7 +519,6 @@ include_once 'connect.php';
                                             break
                                         }
                                         case false: {
-                                            let selected = response.error.errorId
                                             $('.modal-body-alert').html('There are selected Users that doesn\'t exist anymore')
                                             $('#alert-modal').modal('show')
                                             $('.check').prop("checked", false);
@@ -567,7 +553,6 @@ include_once 'connect.php';
                                                 break
                                             }
                                             case false: {
-                                                let selected = response.error.errorId
                                                 $('.modal-body-alert').html('There are selected Users that already deleted')
                                                 $('#alert-modal').modal('show')
                                                 selected.forEach(function (select) {
@@ -596,140 +581,12 @@ include_once 'connect.php';
                             return $(this).val();
                         }).get();
 
-                        if (container.hasClass('head')) {
-                            selectCheck(numChecked,sel,selectedRows)
-                        } else if (container.hasClass('footer')) {
-                            selectCheck(numChecked,sel,selectedRows)
-
+                        if (container.hasClass('action-header')) {
+                            selectCheck(numChecked, sel, selectedRows)
+                        } else if (container.hasClass('action-footer')) {
+                            selectCheck(numChecked, sel, selectedRows)
                         }
-
-
                     });
-
-
-                    // $(document).on('click', '.ok-2', function () {
-                    //     const numChecked = $('.select-checkbox:checked')
-                    //     const sel2 = $('.sel-2').val()
-                    //     let selectedRows = numChecked.map(function () {
-                    //         return $(this).val();
-                    //     }).get();
-                    //     if (numChecked.length === 0 && sel2 !== '') {
-                    //         $('.modal-body-alert').html('Please pick at least one User')
-                    //         $('#alert-modal').modal('show')
-                    //
-                    //     } else if (numChecked.length !== 0 && sel2 === '') {
-                    //         $('.modal-body-alert').html('Please choose the option')
-                    //         $('#alert-modal').modal('show')
-                    //     } else if (numChecked.length === 0 && sel2 === '') {
-                    //         $('.modal-body-alert').html('Please pick at least one User and choose an option');
-                    //         $('#alert-modal').modal('show');
-                    //     } else if (sel2 === 'set-active') {
-                    //         $.ajax({
-                    //             url: "forms/setUser.php",
-                    //             type: "post",
-                    //             data: {
-                    //                 setActive: selectedRows
-                    //             },
-                    //             dataType: 'json',
-                    //             success: function (response) {
-                    //                 switch (response.status) {
-                    //                     case true: {
-                    //                         selectedRows.forEach(function (select) {
-                    //                             $('#status-' + select).addClass('active')
-                    //                         })
-                    //                         $('.check').prop("checked", false);
-                    //                         $("#all-items").prop("checked", false);
-                    //                         break
-                    //                     }
-                    //                     case false: {
-                    //                         let selected = response.error.errorId
-                    //                         $('.modal-body-alert').html('There are selected Users that doesn\'t exist anymore')
-                    //                         $('#alert-modal').modal('show')
-                    //                         selected.forEach(function (select) {
-                    //                             $("#tr-" + select).remove();
-                    //                         })
-                    //                         $('.check').prop("checked", false);
-                    //                         $("#all-items").prop("checked", false);
-                    //                         break
-                    //                     }
-                    //                 }
-                    //             }
-                    //         })
-                    //
-                    //     } else if (sel2 === 'set-not-active') {
-                    //         $.ajax({
-                    //             url: "forms/setUser.php",
-                    //             type: "post",
-                    //             data: {
-                    //                 setNotActive: selectedRows
-                    //             },
-                    //             dataType: 'json',
-                    //             success: function (response) {
-                    //                 switch (response.status) {
-                    //                     case true: {
-                    //                         selectedRows.forEach(function (select) {
-                    //                             $('#status-' + select).removeClass('active')
-                    //                         })
-                    //                         $('.check').prop("checked", false);
-                    //                         $("#all-items").prop("checked", false);
-                    //
-                    //                         break
-                    //                     }
-                    //                     case false: {
-                    //                         let selected = response.error.errorId
-                    //                         $('.modal-body-alert').html('There are selected Users that doesn\'t exist anymore')
-                    //                         $('#alert-modal').modal('show')
-                    //                         selected.forEach(function (select) {
-                    //                             $("#tr-" + select).remove();
-                    //                         })
-                    //                         $('.check').prop("checked", false);
-                    //                         $("#all-items").prop("checked", false);
-                    //                         break
-                    //                     }
-                    //                 }
-                    //             }
-                    //         })
-                    //     } else if (sel2 === 'set-delete') {
-                    //         $('#delete-modal').modal('show')
-                    //         $('.modal-body-delete').html('Are you sure you want to delete this users?')
-                    //         $('#confirm-delete').addClass('user-set-delete');
-                    //         $(document).off('click', '.user-set-delete').on('click', '.user-set-delete', function () {
-                    //             $.ajax({
-                    //                 url: "forms/setUser.php",
-                    //                 type: "post",
-                    //                 data: {
-                    //                     setDelete: selectedRows
-                    //                 },
-                    //                 dataType: 'json',
-                    //                 success: function (response) {
-                    //                     switch (response.status) {
-                    //                         case true: {
-                    //                             selectedRows.forEach(function (select) {
-                    //                                 $("#tr-" + select).remove();
-                    //                             })
-                    //                             $('.check').prop("checked", false);
-                    //                             $("#all-items").prop("checked", false);
-                    //                             break
-                    //                         }
-                    //                         case false: {
-                    //                             let selected = response.error.errorId
-                    //                             $('.modal-body-alert').html('There are selected Users that already deleted')
-                    //                             $('#alert-modal').modal('show')
-                    //                             selected.forEach(function (select) {
-                    //                                 $("#tr-" + select).remove();
-                    //                             })
-                    //                             $('.check').prop("checked", false);
-                    //                             $("#all-items").prop("checked", false);
-                    //                             break
-                    //                         }
-                    //                     }
-                    //                 }
-                    //             })
-                    //             $('#confirm-delete').removeClass('user-set-delete')
-                    //             $('#delete-modal').modal('hide');
-                    //         });
-                    //     }
-                    // });
                 </script>
 
 </body>
